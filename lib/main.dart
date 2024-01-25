@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:music_therapy/theme.dart';
 import 'package:music_therapy/view/FavoriteMusicListPage.dart';
 import 'package:music_therapy/view/ScaffoldPage.dart';
 import 'package:music_therapy/view/SongListPage.dart';
 
 void main() {
   runApp(const MyApp());
-
 }
 
 
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
+        colorScheme: ColorScheme.fromSeed(seedColor: mainTheme),
         fontFamily: "StarRail",
         useMaterial3: true,
       ),

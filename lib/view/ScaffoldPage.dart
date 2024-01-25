@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_therapy/theme.dart';
 import 'package:music_therapy/view/HomePage.dart';
 import 'package:music_therapy/view/PersonalPage.dart';
 import 'package:music_therapy/view/RecommendSongListPage.dart';
@@ -54,9 +55,9 @@ class _ScaffoldPageState extends State<ScaffoldPage> {
       drawer: const SideBar(),
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Colors.grey,
-        selectedItemColor: Colors.deepOrange,
+        selectedItemColor: mainTheme,
         unselectedLabelStyle: const TextStyle(color: Colors.grey),
-        selectedLabelStyle: const TextStyle(color: Colors.deepOrange),
+        selectedLabelStyle: TextStyle(color: mainTheme),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

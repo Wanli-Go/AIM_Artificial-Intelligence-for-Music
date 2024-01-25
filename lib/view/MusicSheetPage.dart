@@ -5,7 +5,7 @@ import 'package:music_therapy/view/MusicDetailPage.dart';
 import 'package:music_therapy/view/MusicPlayPage.dart';
 
 import '../model/Music.dart';
-// 定义一个最近播放页面的组件，继承自 StatefulWidget
+// 定义一个最近播放页面的组件
 class MusicSheetPage extends StatefulWidget {
   const MusicSheetPage({super.key,required this.musicSheet});
   final MusicSheet musicSheet;

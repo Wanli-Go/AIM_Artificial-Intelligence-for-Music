@@ -44,6 +44,7 @@ dependencies:
   kg_charts: ^0.0.1
   rating_dialog: any
   sleek_circular_slider: any
+  particles_flutter: ^0.1.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -67,6 +68,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/audio/test.mp3
+    - assets/image/logo.png
 
   fonts:  
   - family: StarRail

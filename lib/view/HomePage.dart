@@ -1,12 +1,15 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:music_therapy/component/BottomMusicBar.dart';
 import 'package:music_therapy/service/MusicService.dart';
-import 'package:music_therapy/service/MusicSheetService.dart';
-import 'package:music_therapy/view/MusicSheetPage.dart';
+import 'package:particles_flutter/particles_flutter.dart';
+//import 'package:music_therapy/service/MusicSheetService.dart';
+//import 'package:music_therapy/view/MusicSheetPage.dart';
 
 import '../model/GlobalMusic.dart';
 import '../model/Music.dart';
-import '../model/MusicSheet.dart';
+//import '../model/MusicSheet.dart';
 
 /*
   HomePage displays the main interface for the app, focusing on music discovery and recent plays.
@@ -31,7 +34,6 @@ import '../model/MusicSheet.dart';
       (It's in parallel with the Bottom Navigation bar from the Scaffold Page.)
   */
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -40,13 +42,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<MusicSheet> _recommendedMusicSheetsList = [];
+  //final List<MusicSheet> _recommendedMusicSheetsList = [];
   final List<Music> _recentlyPlayedMusicList = [];
-  final RecommendMusicSheetsService recommendService = RecommendMusicSheetsService();
-  final RecentlyPlayedMusicService recentlyPlayedMusicService = RecentlyPlayedMusicService();
+  //final RecommendMusicSheetsService recommendService = RecommendMusicSheetsService();
+  final RecentlyPlayedMusicService recentlyPlayedMusicService =
+      RecentlyPlayedMusicService();
 
   // Added variables to track loading state
-  bool _isLoadingRecommendedMusicSheets =  true;
+  // bool _isLoadingRecommendedMusicSheets =  true;
   bool _isLoadingRecentlyPlayedMusic = true;
 
   @override
@@ -64,6 +67,7 @@ class _HomePageState extends State<HomePage> {
       }
     });
 
+    /* Deprecated
     // Fetch recommended music sheets
     recommendService.getMusicSheet(0, 10).then((value) {
       if (mounted) {
@@ -73,116 +77,111 @@ class _HomePageState extends State<HomePage> {
         });
       }
     });
+    */
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
+      alignment: Alignment.bottomCenter,
       children: [
-        Expanded(
-          child: SingleChildScrollView(
+      Column(
+        children: [
+          Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 // Recommended Music Sheets Section
-                _isLoadingRecommendedMusicSheets 
-                ? const Center(child: CircularProgressIndicator()) // Show loading indicator
-                : _buildRecommendedMusicSheetsSection(),
+                // _isLoadingRecommendedMusicSheets
+                // ? const Center(child: CircularProgressIndicator()) // Show loading indicator
+                //  (Deprecated) : _buildRecommendedMusicSheetsSection(),
+                _buildHomePageDynamicView(),
 
-                SizedBox(height: (_isLoadingRecentlyPlayedMusic && _isLoadingRecommendedMusicSheets) ? MediaQuery.of(context).size.height * 0.4 : 1),
+                SizedBox(
+                    height: (_isLoadingRecentlyPlayedMusic)
+                        ? MediaQuery.of(context).size.height * 0.4
+                        : 1),
 
                 // Recently Played Music Section
-                _isLoadingRecentlyPlayedMusic 
-                ? const Center(child: CircularProgressIndicator()) // Show loading indicator
-                : _buildRecentlyPlayedMusicSection(),
+                _isLoadingRecentlyPlayedMusic
+                    ? const Center(
+                        child:
+                            CircularProgressIndicator()) // Show loading indicator
+                    : _buildRecentlyPlayedMusicSection(),
               ],
             ),
           ),
-        ),
-        BottomMusicBar(music: GlobalMusic.music)
-      ],
-    );
+        ],
+      ),
+
+      // A bottom music bar to show currently playing music
+      BottomMusicBar(music: GlobalMusic.music)
+    ]);
   }
 
-    /* 添加推荐歌单
-    This Flutter widget is a Container containing a Column with two main children:
-        1. A Text widget for displaying the title '推荐歌单'.
-        2. An Expanded widget wrapping a ListView.builder for a horizontally scrolling list.
-          The ListView.builder generates items using a GestureDetector containing a Container. Each item in the list consists of:
-          - A ClipRRect with an Image.network for displaying images.
-          - A Text widget for showing the name of the music sheet.
-          On tapped, it navigates to a MusicSheet Page with the specified music sheet.
-    */
-  Widget _buildRecommendedMusicSheetsSection() {
-    return Flexible(
-      // 添加灵活组件
+  Widget _buildHomePageDynamicView() {
+    return Center(
       child: Container(
-        height: 200.0,
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              '推荐歌单',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
+        key: UniqueKey(),
+        child: Stack(alignment: Alignment.center, children: [
+          Center(
+            child: CircularParticle(
+              // key: UniqueKey(),
+              awayRadius: 80,
+              numberOfParticles: 200,
+              speedOfParticles: 0.5,
+              height: MediaQuery.of(context).size.height * 0.35,
+              width: MediaQuery.of(context).size.width,
+              onTapAnimation: true,
+              particleColor: Colors.white.withAlpha(150),
+              awayAnimationDuration: const Duration(milliseconds: 1000),
+              maxParticleSize: 6,
+              isRandSize: true,
+              isRandomColor: true,
+              randColorList: [
+                Colors.deepOrange.shade400.withAlpha(210),
+                Colors.grey.shade300.withAlpha(210),
+                Colors.yellow.withAlpha(100),
+              ],
+              awayAnimationCurve: Curves.easeInOutBack,
+              enableHover: true,
+              hoverColor: Colors.white,
+              hoverRadius: 90,
+              connectDots: false, //not recommended
+            ),
+          ),
+          Center(
+            child: SizedBox(
+              height: 250,
+              width: 250, // Set a fixed width to make the image circular
+              child: ClipOval(
+                child: ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return const RadialGradient(
+                      center: Alignment.center,
+                      radius: 0.5,
+                      colors: [Colors.black, Colors.transparent],
+                      stops: [
+                        0.7,
+                        1.0
+                      ], // Adjust these stops for desired effect
+                    ).createShader(bounds);
+                  },
+                  blendMode: BlendMode
+                      .dstIn, // This blend mode will fade out the edges
+                  child:
+                      Image.asset("assets/image/logo.png", fit: BoxFit.cover),
+                ),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal, // 横向列表
-                itemCount: _recommendedMusicSheetsList
-                    .length, // 列表项的数量，使用_recommendedMusicList的长度
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => MusicSheetPage(
-                            musicSheet: _recommendedMusicSheetsList[index]),
-                        // 将数据传递给下一个页面，使用_recommendedMusicList中的元素
-                      ));
-                    },
-                    child: Container(
-                      width: 110.0,
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 5.0,
-                        vertical: 10.0,
-                      ),
-                      child: Column(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: Image.network(
-                              // 使用网络图片作为示例，使用_musicSheetList中的元素的图片
-                              _recommendedMusicSheetsList[index].image ??
-                                  'https://picsum.photos/id/${index + 20}/110/110',
-                              fit: BoxFit.cover, // 按照原始比例显示
-                            ),
-                          ),
-                          // const SizedBox(height: 0.0), // 图片和文字之间的空隙
-                          Text(
-                            // 使用_musicSheetList中的元素的名称
-                            _recommendedMusicSheetsList[index].musicSheetName,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+          ),
+        ]),
       ),
     );
   }
 
-
-    /* 常听音乐组件
+  /* 常听音乐组件
     This widget is a Container with a dynamic height set to half of the screen's height. It contains a Column with two children:
 
     1. A Text widget labeled '常听音乐' ('Frequently Played Music'), styled with a bold, 18.0 font size.
@@ -196,7 +195,7 @@ class _HomePageState extends State<HomePage> {
     */
   Widget _buildRecentlyPlayedMusicSection() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.5, // 根据屏幕高度自动调整
+      height: MediaQuery.of(context).size.height * 0.45, // 根据屏幕高度自动调整
       padding: const EdgeInsets.all(10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,4 +245,84 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  /* Deprecated
+  
+    /* 添加推荐歌单
+    This Flutter widget is a Container containing a Column with two main children:
+        1. A Text widget for displaying the title '推荐歌单'.
+        2. An Expanded widget wrapping a ListView.builder for a horizontally scrolling list.
+          The ListView.builder generates items using a GestureDetector containing a Container. Each item in the list consists of:
+          - A ClipRRect with an Image.network for displaying images.
+          - A Text widget for showing the name of the music sheet.
+          On tapped, it navigates to a MusicSheet Page with the specified music sheet.
+    */
+  Widget _buildRecommendedMusicSheetsSection() {
+    return Container(
+      height: 200,
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '推荐歌单',
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal, // 横向列表
+              itemCount: _recommendedMusicSheetsList
+                  .length, // 列表项的数量，使用_recommendedMusicList的长度
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => MusicSheetPage(
+                          musicSheet: _recommendedMusicSheetsList[index]),
+                      // 将数据传递给下一个页面，使用_recommendedMusicList中的元素
+                    ));
+                  },
+                  child: Container(
+                    width: 110.0,
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 5.0,
+                      vertical: 10.0,
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 100,
+                          width: 100,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10.0),
+                            child: Image.network(
+                              // 使用网络图片作为示例，使用_musicSheetList中的元素的图片
+                              _recommendedMusicSheetsList[index].image ??
+                                  'https://picsum.photos/id/${index + 20}/110/110',
+                              fit: BoxFit.cover, // 按照原始比例显示
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 5.0), // 图片和文字之间的空隙
+                        Text(
+                          // 使用_musicSheetList中的元素的名称
+                          _recommendedMusicSheetsList[index].musicSheetName,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  */
 }
