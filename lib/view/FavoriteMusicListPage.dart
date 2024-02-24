@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:music_therapy/model/GlobalMusic.dart';
 import 'package:music_therapy/service/MusicService.dart';
 import 'package:music_therapy/view/MusicDetailPage.dart';
+import 'package:music_therapy/view/MusicPlayPage.dart';
 
 import '../model/Music.dart';
-import 'MusicPlayPage.dart';
 // 定义一个最近播放页面的组件，继承自 StatefulWidget
 class FavoriteMusicListPage extends StatefulWidget {
-  const FavoriteMusicListPage({super.key});
+  const FavoriteMusicListPage( {super.key});
+  
 
   @override
   _FavoriteMusicListPageState createState() => _FavoriteMusicListPageState();
@@ -15,20 +17,15 @@ class FavoriteMusicListPage extends StatefulWidget {
 // 定义一个最近播放页面的状态类，继承自 State<RecentPlayPage>
 class _FavoriteMusicListPageState extends State<FavoriteMusicListPage> {
   // 定义一个列表，用于存储最近播放的歌曲信息
-  List<Music> _likeMusic = [];
+  List<Music> _recentSongs = [];
   final RecentlyPlayedMusicService musicService=RecentlyPlayedMusicService();
   // 定义一个方法，用于从本地存储中获取最近播放的歌曲信息
-  void _getRecentSongs() async {
-    musicService.getLike("1",0, 10).then((value) {
-      setState(() {
-        _likeMusic.addAll(value);
-      });
-    });
-  }
 
   // 定义一个方法，用于清空最近播放的歌曲信息
   void _clearRecentSongs() async {
-    _likeMusic=[];
+    setState(() {
+    _recentSongs=[];
+    });
   }
 
   // 定义一个方法，用于在页面初始化时调用
@@ -36,7 +33,13 @@ class _FavoriteMusicListPageState extends State<FavoriteMusicListPage> {
   void initState() {
     super.initState();
     // 调用获取最近播放的歌曲信息的方法
-    _getRecentSongs();
+          musicService.getRecent("1", 0, 10).then((value) {
+      if (mounted) {
+        setState(() {
+          _recentSongs.addAll(value);
+        });
+      }
+    });
   }
 
   // 定义一个方法，用于构建页面的界面
@@ -51,118 +54,76 @@ class _FavoriteMusicListPageState extends State<FavoriteMusicListPage> {
         // 设置标题栏的右侧按钮
         actions: [
           // 如果列表不为空，则显示一个清空按钮
-          if (_likeMusic.isNotEmpty)
+          if (_recentSongs.isNotEmpty)
             IconButton(
               // 设置按钮的图标
               icon: const Icon(Icons.delete),
               // 设置按钮的提示文本
-              tooltip: '清空最近播放',
+              tooltip: '清空全部收藏',
               // 设置按钮的点击事件
               onPressed: _clearRecentSongs,
             ),
         ],
       ),
       // 设置页面的主体内容
-      body: _likeMusic.isEmpty
+      body: _recentSongs.isEmpty
       // 如果列表为空，则显示一个居中的文本
           ? const Center(
-        child: Text('暂无最近播放的歌曲'),
+        child: Text('·正在加载收藏歌曲·'),
       )
       // 如果列表不为空，则显示一个列表视图
-          : ListView.builder(
-        // 设置列表的长度
-        itemCount: _likeMusic.length,
-        // 设置列表的构建器
-        itemBuilder: (context, index) {
-          // 获取当前索引的歌曲对象
-          Music music = _likeMusic[index];
-          // 返回一个列表项组件
-          return buildListTile(music, context);
-        },
-      ),
-    );
-  }
-
-  ListTile buildListTile(Music music, BuildContext context) {
-    return ListTile(
-      // 设置列表项的左侧图标，显示歌曲的封面
-      leading: Image.network(music.image),
-      // 设置列表项的标题，显示歌曲的名称
-      title: Text(music.name),
-      // 设置列表项的副标题，显示歌曲的歌手和专辑
-      subtitle: Text(music.singer),
-      // 设置列表项的右侧图标，显示一个更多选项的按钮
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
+          : Container(
+      height: MediaQuery.of(context).size.height * 0.9, // 根据屏幕高度自动调整
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          IconButton(
-            // 设置按钮的图标，根据 isLike 属性的值显示不同的颜色
-            icon: Icon(
-              Icons.favorite,
-              color: music.isLike ? Colors.red : Colors.grey,
+          const Text(
+            '↓ 由新到旧',
+            textAlign: TextAlign.right,
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
             ),
-            // 设置按钮的点击事件
-            onPressed: () {
-              // 调用改变 isLike 属性的方法
-              _toggleLike(music);
-            },
           ),
-          IconButton(
-            // 设置按钮的图标
-            icon: const Icon(Icons.more_vert),
-            // 设置按钮的提示文本
-            tooltip: '更多选项',
-            // 设置按钮的点击事件
-            onPressed: () {
-              // 显示一个底部弹出菜单
-              showModalBottomSheet(
-                // 设置菜单的上下文
-                context: context,
-                // 设置菜单的构建器
-                builder: (context) {
-                  // 返回一个列组件，用于显示菜单的选项
-                  return Column(
-                    // 设置列的主轴对齐方式为最小
-                    mainAxisSize: MainAxisSize.min,
-                    // 设置列的子组件
-                    children: [
-                      // 创建一个菜单项组件，用于显示删除该歌曲的选项
-                      ListTile(
-                        leading: const Icon(Icons.details),
-                        // 设置菜单项的标题
-                        title: const Text('歌曲详情'),
-                        // 设置菜单项的点击事件
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => MusicDetailPage(music: music), // 将数据传递给下一个页面
-                          ));
-                        },
-                      )
-                    ],
-                  );
-                },
-              );
-            },
+          Expanded(
+            child: ListView.builder(
+              scrollDirection: Axis.vertical, // 纵向列表
+              itemCount: _recentSongs.length, // 列表项的数量
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Image.network(
+                      _recentSongs[index].image,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  title: Text(
+                    _recentSongs[index].name,
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.height *
+                          0.02, // 根据屏幕高度自动调整
+                    ),
+                  ),
+                  subtitle: Text(
+                    _recentSongs[index].singer,
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.height * 0.015,
+                    ),
+                  ),
+                  trailing: const Icon(Icons.more_vert),
+                  onTap: () {
+                    // Update the global music to the one that was tapped
+                    GlobalMusic.music = _recentSongs[index];
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
-      onTap: (){
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (_) => MusicPlayPage(music: music)
-        )
-        );
-      },
+    ),
     );
-  }
-
-  // 定义一个方法，用于改变歌曲的 isLike 属性
-  void _toggleLike(Music music) async {
-    music.isLike = !music.isLike;
-    if(music.isLike){
-      musicService.likeMusic("1", music.musicId);
-    }else{
-      musicService.dislikeMusic("1", music.musicId);
-    }
-    setState(() {});
   }
 }

@@ -34,8 +34,13 @@ import '../model/Music.dart';
       (It's in parallel with the Bottom Navigation bar from the Scaffold Page.)
   */
 
+class HomePageController {
+  bool isFirstTimeLoad = false;
+}
+
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+  final HomePageController controller = HomePageController();
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -61,7 +66,6 @@ class _HomePageState extends State<HomePage> {
       if (mounted) {
         setState(() {
           _recentlyPlayedMusicList.addAll(value);
-          GlobalMusic.music = _recentlyPlayedMusicList.first;
           _isLoadingRecentlyPlayedMusic = false; // Update loading state
         });
       }
@@ -82,15 +86,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
+    return Stack(alignment: Alignment.bottomCenter, children: [
       Column(
         children: [
           Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 // Recommended Music Sheets Section
                 // _isLoadingRecommendedMusicSheets
@@ -98,10 +100,7 @@ class _HomePageState extends State<HomePage> {
                 //  (Deprecated) : _buildRecommendedMusicSheetsSection(),
                 _buildHomePageDynamicView(),
 
-                SizedBox(
-                    height: (_isLoadingRecentlyPlayedMusic)
-                        ? MediaQuery.of(context).size.height * 0.4
-                        : 1),
+                const SizedBox(height: 5),
 
                 // Recently Played Music Section
                 _isLoadingRecentlyPlayedMusic
@@ -129,25 +128,25 @@ class _HomePageState extends State<HomePage> {
             child: CircularParticle(
               // key: UniqueKey(),
               awayRadius: 80,
-              numberOfParticles: 200,
+              numberOfParticles: 130,
               speedOfParticles: 0.5,
               height: MediaQuery.of(context).size.height * 0.35,
               width: MediaQuery.of(context).size.width,
               onTapAnimation: true,
               particleColor: Colors.white.withAlpha(150),
               awayAnimationDuration: const Duration(milliseconds: 1000),
-              maxParticleSize: 6,
+              maxParticleSize: 4.5,
               isRandSize: true,
               isRandomColor: true,
               randColorList: [
-                Colors.deepOrange.shade400.withAlpha(210),
-                Colors.grey.shade300.withAlpha(210),
+                Colors.deepOrange.shade300.withAlpha(210),
+                const Color.fromARGB(255, 231, 218, 190).withAlpha(210),
                 Colors.yellow.withAlpha(100),
               ],
               awayAnimationCurve: Curves.easeInOutBack,
               enableHover: true,
               hoverColor: Colors.white,
-              hoverRadius: 90,
+              hoverRadius: 30,
               connectDots: false, //not recommended
             ),
           ),
@@ -163,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                       radius: 0.5,
                       colors: [Colors.black, Colors.transparent],
                       stops: [
-                        0.7,
+                        0.73,
                         1.0
                       ], // Adjust these stops for desired effect
                     ).createShader(bounds);
@@ -201,7 +200,7 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            '常听音乐',
+            '常听疗愈音乐',
             style: TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
@@ -235,7 +234,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                   trailing: const Icon(Icons.more_vert),
                   onTap: () {
-                    // TODO: Display Music Detail / Play Music
+                    // Update the global music to the one that was tapped
+                    GlobalMusic.music = _recentlyPlayedMusicList[index];
                   },
                 );
               },

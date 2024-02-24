@@ -19,7 +19,7 @@ class MusicPlayPage extends StatefulWidget {
 
 class _MusicPlayPageState extends State<MusicPlayPage> {
   // 创建一个音频播放器对象
-  AudioPlayer audioPlayer=AudioPlayer();
+  AudioPlayer audioPlayer = GlobalMusic.globalAudioPlayer;
   // 创建一个音频播放状态变量
   PlayerState playerState = PlayerState.stopped;
   // 创建一个音频播放进度变量
@@ -61,7 +61,6 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
   Future<void> play() async {
     if(isFirst==true){
       GlobalMusic.globalAudioPlayer.release();
-      GlobalMusic.globalAudioPlayer=audioPlayer;
       GlobalMusic.globalPlayerState=playerState;
       GlobalMusic.globalPosition=position;
       GlobalMusic.globalDuration=duration;

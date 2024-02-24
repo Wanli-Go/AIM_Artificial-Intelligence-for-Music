@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:music_therapy/theme.dart';
 import 'package:music_therapy/view/FavoriteMusicListPage.dart';
-import 'package:music_therapy/view/ScaffoldPage.dart';
+import 'package:music_therapy/ScaffoldPage.dart';
 import 'package:music_therapy/view/SongListPage.dart';
 
+/*
+Entry to application.
+
+Defines theme data and some routes.
+
+Directs to the ScaffoldPage.
+*/
 void main() {
   runApp(const MyApp());
 }

@@ -3,27 +3,41 @@ import 'package:audioplayers/audioplayers.dart';
 import 'Music.dart';
 
 
-class GlobalMusic{
-
-
-  static AudioPlayer globalAudioPlayer = AudioPlayer();
-
+class GlobalMusic {
+  static final AudioPlayer globalAudioPlayer = AudioPlayer();
   static PlayerState globalPlayerState = PlayerState.stopped;
 
-  static Music music=Music(
-      "1",
-      'Shape of You', // 歌曲名称
-      'Ed Sheeran', // 歌手
-      233, // 时长，单位秒
-      'https://picsum.photos/id/100/200/200', // 图片
-      "audio/test.mp3", // 文件
-      true,
-      {});
+  // Private backing field for music
+  static Music _music = Music.example;
 
-  static Source globalSource=AssetSource('audio/test.mp3');
+  // Getter for music
+  static Music get music => _music;
+
+  // Setter for music
+  static set music(Music newMusic) {
+    Music.recentPlayedList.insert(0, newMusic);
+    globalAudioPlayer.pause();
+    globalPlayerState = PlayerState.paused;
+    _music = newMusic;
+    // Update the global source with the new music file
+    globalSource = AssetSource(newMusic.file);
+    // Reset the global position to zero
+    globalPosition = Duration.zero;
+    // Set the global duration to the new music's duration
+    globalDuration = Duration(seconds: newMusic.duration);
+    // Additional logic to use with the audio player can be added here
+    // For example, loading the new source into the audio player
+    globalSource = AssetSource(newMusic.file);
+    globalAudioPlayer.play(globalSource);
+    globalPlayerState = PlayerState.playing;
+
+  }
+
+  static Source globalSource = AssetSource('audio/silence.mp3');
 
   static Duration globalPosition = Duration.zero;
-  // 创建一个音频总时长变量
+
+  // Creating a variable for the total duration of the audio
   static Duration globalDuration = Duration.zero;
 
 }

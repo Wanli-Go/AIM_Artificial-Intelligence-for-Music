@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:music_therapy/theme.dart';
 import 'package:music_therapy/view/MusicPlayPage.dart';
 
 import '../model/GlobalMusic.dart';
@@ -25,9 +28,9 @@ State Management:
 
 class BottomMusicBar extends StatefulWidget {
   // 定义一个Music对象作为参数
-  final Music music;
+  Music music;
   // 定义一个构造函数，接收music参数
-  const BottomMusicBar({super.key, required this.music});
+  BottomMusicBar({super.key, required this.music});
 
   @override
   _BottomMusicBarState createState() => _BottomMusicBarState();
@@ -51,6 +54,7 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
     audioPlayer.onPlayerStateChanged.listen((state) {
       if (mounted) {
         setState(() {
+          widget.music = GlobalMusic.music;
           GlobalMusic.globalPlayerState = state;
           playerState = state;
         });
@@ -86,80 +90,107 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
                 MusicPlayPage(music: GlobalMusic.music), // 将数据传递给下一个页面
           ));
         },
-        child: SizedBox(
-          height: 90,
-          // 使用Row布局，水平排列子组件
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              SizedBox(
-                height: 50,
-                child: Row(
-                  // 设置子组件之间的间距
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  // 定义子组件列表
-                  children: [
-                    // 显示歌曲图片，使用CircleAvatar组件，设置半径为40
-                    CircleAvatar(
-                      radius: 40,
-                      // 使用网络图片，传入music的image属性
-                      backgroundImage: NetworkImage(widget.music.image),
-                    ),
+        child: Container(
+          decoration: const BoxDecoration(
+            // Define the linear gradient
+            gradient: LinearGradient(
+              // Colors of the gradient: white at the top, light grey at the bottom
+              colors: [Colors.white, Color.fromARGB(255, 255, 242, 237)],
+              // Start of the gradient
+              begin: Alignment.topCenter,
+              // End of the gradient
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: SizedBox(
+            height: 110,
+            // 使用Row布局，水平排列子组件
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Divider(thickness: 2, color: Colors.grey.shade300),
+                SizedBox(
+                  height: 3,
+                ),
+                SizedBox(
+                  height: 50,
+                  child: Row(
+                    // 设置子组件之间的间距
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    // 定义子组件列表
+                    children: [
+                      // 显示歌曲图片，使用CircleAvatar组件，设置半径为40
+                      CircleAvatar(
+                        radius: 40,
+                        // 使用网络图片，传入music的image属性
+                        backgroundImage: NetworkImage(widget.music.image),
+                      ),
 
-                    // 显示歌曲名称和歌手，使用Column布局，垂直排列子组件
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      // 设置子组件居中对齐
-                      // 定义子组件列表
+                      // 显示歌曲名称和歌手，使用Column布局，垂直排列子组件
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        // 设置子组件居中对齐
+                        // 定义子组件列表
+                        children: [
+                          // 显示歌曲名称，使用Text组件，传入music的name属性
+                          Text(
+                            widget.music.name,
+                            // 设置文字样式，字体大小为16，加粗
+                            style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
+
+                          // 显示歌手，使用Text组件，传入music的singer属性
+                          Text(
+                            widget.music.singer,
+                            // 设置文字样式，字体大小为14，颜色为灰色
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      // 显示播放按钮，使用IconButton组件，传入一个图标和一个点击事件
+                      IconButton(
+                        icon: Icon(playerState == PlayerState.playing
+                            ? Icons.pause
+                            : Icons.play_arrow),
+                        iconSize: 40,
+                        onPressed: play,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 40,
+                  child: Center(
+                    child: Row(
                       children: [
-                        // 显示歌曲名称，使用Text组件，传入music的name属性
-                        Text(
-                          widget.music.name,
-                          // 设置文字样式，字体大小为16，加粗
-                          style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.17,
                         ),
-
-                        // 显示歌手，使用Text组件，传入music的singer属性
-                        Text(
-                          widget.music.singer,
-                          // 设置文字样式，字体大小为14，颜色为灰色
-                          style:
-                              const TextStyle(fontSize: 12, color: Colors.grey),
+                        Expanded(
+                          child: Slider(
+                            value: position.inSeconds.toDouble(),
+                            max: duration.inSeconds.toDouble(),
+                            min: 0,
+                            onChanged: (value) {
+                              setState(() {
+                                audioPlayer
+                                    .seek(Duration(seconds: value.toInt()));
+                              });
+                            },
+                            activeColor: mainTheme,
+                            inactiveColor: Colors.grey,
+                          ),
                         ),
                       ],
                     ),
-                    // 显示播放按钮，使用IconButton组件，传入一个图标和一个点击事件
-                    IconButton(
-                      icon: Icon(playerState == PlayerState.playing
-                          ? Icons.pause
-                          : Icons.play_arrow),
-                      iconSize: 40,
-                      onPressed: play,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 40,
-                child: Center(
-                  child: Slider(
-                    value: position.inSeconds.toDouble(),
-                    max: duration.inSeconds.toDouble(),
-                    min: 0,
-                    onChanged: (value) {
-                      setState(() {
-                        audioPlayer.seek(Duration(seconds: value.toInt()));
-                      });
-                    },
-                    activeColor: Colors.blue,
-                    inactiveColor: Colors.grey,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ));
   }
@@ -170,7 +201,6 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
     if (playerState == PlayerState.playing) {
       await audioPlayer.pause();
     } else {
-      // 否则就播放
       await audioPlayer.play(source);
     }
   }

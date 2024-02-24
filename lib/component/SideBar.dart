@@ -15,10 +15,10 @@ class SideBar extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           const UserAccountsDrawerHeader(
-            accountName: Text('用户名'),
-            accountEmail: Text('邮箱'),
+            accountName: Text('清心'),
+            accountEmail: Text('qingxin3142@163.com'),
             currentAccountPicture: CircleAvatar(
-              backgroundImage: AssetImage(''),
+              backgroundImage: NetworkImage('https://picsum.photos/id/114/200/200'),
             ),
           ),
           ListTile(
@@ -35,7 +35,7 @@ class SideBar extends StatelessWidget {
             leading: const Icon(Icons.favorite),
             title: const Text('我的收藏'),
             onTap: () {
-              // TODO: 跳转到我的收藏页面
+              // // TODO: 跳转到我的收藏页面
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => const FavoriteMusicListPage(), // 将数据传递给下一个页面
               ));

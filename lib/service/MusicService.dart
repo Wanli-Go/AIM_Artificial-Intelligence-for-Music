@@ -115,7 +115,8 @@ class RecentlyPlayedMusicService {
       if (kDebugMode) {
         print('Request failed: Unable to reach desired server IP.');
       }
-      return [Music.example];
+      await Future.delayed(Duration(seconds: 1));
+      return Music.fakeMusicList;
     }
   }
 
