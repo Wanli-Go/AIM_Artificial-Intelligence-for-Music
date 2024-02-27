@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_therapy/model/GlobalMusic.dart';
 import 'package:music_therapy/service/MusicService.dart';
-import 'package:music_therapy/view/MusicDetailPage.dart';
-import 'package:music_therapy/view/MusicPlayPage.dart';
 
 import '../model/Music.dart';
 // 定义一个最近播放页面的组件，继承自 StatefulWidget

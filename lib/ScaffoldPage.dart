@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:motion_tab_bar/MotionBadgeWidget.dart';
 import 'package:motion_tab_bar/MotionTabBar.dart';
 import 'package:motion_tab_bar/MotionTabBarController.dart';
 import 'package:music_therapy/theme.dart';
@@ -64,7 +63,7 @@ class _ScaffoldPageState extends State<ScaffoldPage> with TickerProviderStateMix
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 252, 245, 243),
+        backgroundColor: const Color.fromARGB(255, 252, 245, 243),
         title: Text('音乐疗愈助手 AIM', style: TextStyle(color: Colors.grey.shade800),),
         actions: [
           IconButton(

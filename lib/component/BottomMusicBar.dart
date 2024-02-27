@@ -1,4 +1,3 @@
-import 'dart:ui';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
@@ -109,7 +108,7 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Divider(thickness: 2, color: Colors.grey.shade300),
-                SizedBox(
+                const SizedBox(
                   height: 3,
                 ),
                 SizedBox(

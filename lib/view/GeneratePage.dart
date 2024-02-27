@@ -3,9 +3,7 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:music_therapy/model/Music.dart';
-import 'package:music_therapy/theme.dart';
 
 import '../model/GlobalMusic.dart';
 
@@ -136,7 +134,7 @@ class _GeneratePageState extends State<GeneratePage> {
       },
     );
     // Use Future.delayed to wait for 5 seconds
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 5), () {
       GlobalMusic.music = Music.generatedMusicExample;
       // After 5 seconds, close the dialog
       Navigator.of(context).pop(); // This line dismisses the dialog
@@ -159,7 +157,7 @@ class _GeneratePageState extends State<GeneratePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               // 设置水平布局的子组件列表
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Text(
@@ -217,7 +215,7 @@ class _GeneratePageState extends State<GeneratePage> {
 
                 Row(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                     ),
                     Column(
@@ -225,7 +223,7 @@ class _GeneratePageState extends State<GeneratePage> {
                       children: [
                         Row(
                           children: [
-                            Text(
+                            const Text(
                               "生成一段音乐需要对应的",
                               style: TextStyle(
                                 color: Colors.grey,
@@ -245,7 +243,7 @@ class _GeneratePageState extends State<GeneratePage> {
                         ),
                         Row(
                           children: [
-                            Text(
+                            const Text(
                               "你也可以点击",
                               style: TextStyle(
                                 color: Colors.grey,
@@ -261,7 +259,7 @@ class _GeneratePageState extends State<GeneratePage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Text(
+                            const Text(
                               "，与疗愈助手对话获取提示词",
                               style: TextStyle(
                                 color: Colors.grey,
@@ -343,7 +341,7 @@ class _GeneratePageState extends State<GeneratePage> {
                 // 添加一个进度条
                 Row(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Expanded(
@@ -357,7 +355,7 @@ class _GeneratePageState extends State<GeneratePage> {
                         },
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                   ],

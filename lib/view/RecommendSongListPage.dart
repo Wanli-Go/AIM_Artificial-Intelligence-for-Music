@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:music_therapy/model/GlobalMusic.dart';
 import 'package:music_therapy/model/Music.dart'; // Make sure to import your Music model
 import 'package:music_therapy/theme.dart';
-import 'MusicPlayPage.dart';
 
 class RecommendSongListPage extends StatefulWidget {
   const RecommendSongListPage({Key? key}) : super(key: key);
@@ -52,7 +50,7 @@ class _RecommendSongListPageState extends State<RecommendSongListPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
+        const SizedBox(
           width: 6,
         ),
         Expanded(
@@ -61,7 +59,7 @@ class _RecommendSongListPageState extends State<RecommendSongListPage> {
             children: [
               Container(
                 padding:
-                    EdgeInsets.all(8), // Add some padding inside the container
+                    const EdgeInsets.all(8), // Add some padding inside the container
                 decoration: BoxDecoration(
                   color: Colors
                       .white, // Set the fill color of the container (optional)
@@ -89,13 +87,13 @@ class _RecommendSongListPageState extends State<RecommendSongListPage> {
                 children: [
                   Text(
                     fakeMusicList[_selectedIndex].name,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 19,
                         color: Color.fromARGB(255, 129, 70, 52),
                         fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 20), // Add some spacing
+                  const SizedBox(height: 20), // Add some spacing
                   // Display tags for the selected song
                   if (fakeMusicList[_selectedIndex].tags !=
                       null) // Check if tags are not null
@@ -109,7 +107,7 @@ class _RecommendSongListPageState extends State<RecommendSongListPage> {
                                 children: [
                                   Text(
                                     "${entry.key} : ${entry.value}%",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 16, color: Colors.black),
                                   ),
                                   LinearProgressIndicator(
@@ -124,13 +122,13 @@ class _RecommendSongListPageState extends State<RecommendSongListPage> {
                             )),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
                 child: Text("↑ ↓ 上下滑动", style: TextStyle(color: Colors.grey),)),
             ],
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 5,
         ),
         SizedBox(

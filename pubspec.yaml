@@ -27,6 +27,7 @@ environment:
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
+
 dependencies:
   flutter_neumorphic_plus: ^3.3.0
   motion_tab_bar: ^2.0.4
@@ -47,7 +48,9 @@ dependencies:
   rating_dialog: any
   sleek_circular_slider: any
   particles_flutter: ^0.1.4
+  http: any
 dev_dependencies:
+  flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
 
@@ -57,6 +60,12 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+
+flutter_launcher_icons:
+  android: "app_icon"
+  ios: false
+  image_path: "assets/image/logo-modified.png"
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -70,7 +79,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/audio/
-    - assets/image/logo.png
+    - assets/image/
 
   fonts:  
   - family: StarRail

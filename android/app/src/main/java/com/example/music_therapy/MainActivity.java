@@ -1,4 +1,4 @@
-package com.example.music_therapy;
+package com.harmonyheartmusic.music_therapy;
 
 import io.flutter.embedding.android.FlutterActivity;
 

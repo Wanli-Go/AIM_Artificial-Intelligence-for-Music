@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:music_therapy/theme.dart'; // Add this line for Neumorphic design
 
@@ -54,7 +53,7 @@ class _PersonalPageState extends State<PersonalPage> {
       child: Row(
         children: [
           Neumorphic(
-            style: NeumorphicStyle(
+            style: const NeumorphicStyle(
               shape: NeumorphicShape.convex,
               boxShape: NeumorphicBoxShape.circle(),
               depth: 2,
