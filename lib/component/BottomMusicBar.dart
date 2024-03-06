@@ -27,9 +27,9 @@ State Management:
 
 class BottomMusicBar extends StatefulWidget {
   // 定义一个Music对象作为参数
-  Music music;
+  Music music = GlobalMusic.music;
   // 定义一个构造函数，接收music参数
-  BottomMusicBar({super.key, required this.music});
+  BottomMusicBar({super.key});
 
   @override
   _BottomMusicBarState createState() => _BottomMusicBarState();

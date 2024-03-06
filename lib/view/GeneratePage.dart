@@ -383,20 +383,20 @@ class _GeneratePageState extends State<GeneratePage> {
 
 // 定义一个评分的组件，继承自 StatefulWidget
 class RatingWidget extends StatefulWidget {
-  // 定义一个回调函数，用于返回评分的值
+
   final Function(int) onRatingChanged;
-  // 定义一个构造函数，接收回调函数作为参数
+
   const RatingWidget({super.key, required this.onRatingChanged});
-  // 重写 createState 方法，返回一个 RatingWidgetState 对象
+
   @override
   RatingWidgetState createState() => RatingWidgetState();
 }
 
-// 定义一个评分的组件的状态类，继承自 State<RatingWidget>
+
 class RatingWidgetState extends State<RatingWidget> {
-  // 定义一个整数变量，用于存储评分的值
+
   int rating = 0;
-  // 定义一个列表，用于存储五个星星的图标
+
   List<Icon> stars = [
     const Icon(Icons.star_border),
     const Icon(Icons.star_border),
@@ -404,35 +404,35 @@ class RatingWidgetState extends State<RatingWidget> {
     const Icon(Icons.star_border),
     const Icon(Icons.star_border),
   ];
-  // 重写 build 方法，返回一个水平布局的组件
+
   @override
   Widget build(BuildContext context) {
     return Row(
-      // 设置水平布局的主轴对齐方式为居中对齐
+
       mainAxisAlignment: MainAxisAlignment.center,
-      // 设置水平布局的子组件为一个循环生成的列表
+
       children: List.generate(5, (index) {
-        // 返回一个手势检测的组件，用于处理点击事件
+
         return GestureDetector(
-          // 设置手势检测的子组件为列表中对应的星星图标
+
           child: stars[index],
-          // 设置手势检测的点击事件的回调函数
+
           onTap: () {
-            // 调用 setState 方法，更新组件的状态
+
             setState(() {
-              // 根据点击的索引，更新评分的值
+
               rating = index + 1;
-              // 根据评分的值，更新星星的图标
+
               for (int i = 0; i < 5; i++) {
                 if (i < rating) {
-                  // 如果小于评分的值，设置为实心的星星
+
                   stars[i] = const Icon(Icons.star, color: Colors.yellow);
                 } else {
-                  // 如果大于等于评分的值，设置为空心的星星
+
                   stars[i] = const Icon(Icons.star_border);
                 }
               }
-              // 调用父组件传入的回调函数，传递评分的值
+
               widget.onRatingChanged(rating);
             });
           },
