@@ -1,6 +1,6 @@
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:music_therapy/component/Disc.dart';
 import 'package:music_therapy/theme.dart';
 import 'package:music_therapy/view/MusicPlayPage.dart';
 
@@ -27,7 +27,6 @@ State Management:
 
 class BottomMusicBar extends StatefulWidget {
   // 定义一个Music对象作为参数
-  Music music = GlobalMusic.music;
   // 定义一个构造函数，接收music参数
   BottomMusicBar({super.key});
 
@@ -36,6 +35,7 @@ class BottomMusicBar extends StatefulWidget {
 }
 
 class _BottomMusicBarState extends State<BottomMusicBar> {
+  Music music = GlobalMusic.music;
   AudioPlayer audioPlayer = GlobalMusic.globalAudioPlayer;
   // 创建一个音频播放状态变量
   PlayerState playerState = GlobalMusic.globalPlayerState;
@@ -44,8 +44,6 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
   // 创建一个音频总时长变量
   Duration duration = GlobalMusic.globalDuration;
 
-  Source source = GlobalMusic.globalSource;
-
   @override
   void initState() {
     super.initState();
@@ -53,8 +51,8 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
     audioPlayer.onPlayerStateChanged.listen((state) {
       if (mounted) {
         setState(() {
-          widget.music = GlobalMusic.music;
-          GlobalMusic.globalPlayerState = state;
+          music = GlobalMusic.music;
+
           playerState = state;
         });
       }
@@ -63,7 +61,6 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
     audioPlayer.onPositionChanged.listen((pos) {
       if (mounted) {
         setState(() {
-          GlobalMusic.globalPosition = pos;
           position = pos;
         });
       }
@@ -72,7 +69,6 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
     audioPlayer.onDurationChanged.listen((dur) {
       if (mounted) {
         setState(() {
-          GlobalMusic.globalDuration = dur;
           duration = dur;
         });
       }
@@ -118,12 +114,7 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     // 定义子组件列表
                     children: [
-                      // 显示歌曲图片，使用CircleAvatar组件，设置半径为40
-                      CircleAvatar(
-                        radius: 40,
-                        // 使用网络图片，传入music的image属性
-                        backgroundImage: NetworkImage(widget.music.image),
-                      ),
+                      const Disc(),
 
                       // 显示歌曲名称和歌手，使用Column布局，垂直排列子组件
                       Column(
@@ -133,7 +124,7 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
                         children: [
                           // 显示歌曲名称，使用Text组件，传入music的name属性
                           Text(
-                            widget.music.name,
+                            music.name,
                             // 设置文字样式，字体大小为16，加粗
                             style: const TextStyle(
                                 fontSize: 14,
@@ -143,7 +134,7 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
 
                           // 显示歌手，使用Text组件，传入music的singer属性
                           Text(
-                            widget.music.singer,
+                            music.singer,
                             // 设置文字样式，字体大小为14，颜色为灰色
                             style: const TextStyle(
                                 fontSize: 12, color: Colors.grey),
@@ -200,7 +191,7 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
     if (playerState == PlayerState.playing) {
       await audioPlayer.pause();
     } else {
-      await audioPlayer.play(source);
+      await audioPlayer.play(GlobalMusic.globalSource);
     }
   }
 }

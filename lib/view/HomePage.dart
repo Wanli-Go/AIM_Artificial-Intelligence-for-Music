@@ -138,6 +138,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildRecentlyPlayedMusicSection() {
-    return GenericMusicList(list: widget._recentlyPlayedMusicList, heightPercentage: 0.35,);
+    return GenericMusicList(list: widget._recentlyPlayedMusicList, heightPercentage: 0.35, headerline: "常听疗愈音乐",);
   }
 }

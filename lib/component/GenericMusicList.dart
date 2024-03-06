@@ -5,7 +5,8 @@ import 'package:music_therapy/model/Music.dart';
 class GenericMusicList extends StatelessWidget {
   final List<Music> list;
   final double heightPercentage;
-  const GenericMusicList({super.key, required this.list, required this.heightPercentage});
+  final String headerline;
+  const GenericMusicList({super.key, required this.list, required this.heightPercentage, required this.headerline});
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +16,9 @@ class GenericMusicList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            '常听疗愈音乐',
-            style: TextStyle(
+          Text(
+            headerline,
+            style: const TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.bold,
             ),

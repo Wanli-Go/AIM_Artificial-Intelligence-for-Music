@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:motion_tab_bar/MotionTabBar.dart';
 import 'package:motion_tab_bar/MotionTabBarController.dart';
+import 'package:music_therapy/component/Disc.dart';
 import 'package:music_therapy/theme.dart';
 import 'package:music_therapy/view/HomePage.dart';
 import 'package:music_therapy/view/PersonalPage.dart';
@@ -65,13 +66,8 @@ class _ScaffoldPageState extends State<ScaffoldPage> with TickerProviderStateMix
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 252, 245, 243),
         title: Text('音乐疗愈助手 AIM', style: TextStyle(color: Colors.grey.shade800),),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search_rounded),
-            onPressed: () {
-              // TODO: Implement Search Logic
-            },
-          ),
+        actions: const [
+          Disc()
         ],
         iconTheme: IconThemeData(color: Colors.deepOrange.shade700),
       ),
@@ -91,35 +87,6 @@ class _ScaffoldPageState extends State<ScaffoldPage> with TickerProviderStateMix
         icons: const [Icons.home_filled, Icons.queue_music_rounded, Icons.generating_tokens, Icons.miscellaneous_services_rounded],
         // optional badges, length must be same with labels
         badges: const [null, null, null, null],
-          // Default Motion Badge Widget
-          /* const MotionBadgeWidget(
-            text: '10+',
-            textColor: Colors.white, // optional, default to Colors.white
-            color: Colors.red, // optional, default to Colors.red
-            size: 18, // optional, default to 18
-          ),
-          // custom badge Widget
-          Container(
-            color: Colors.black,
-            padding: const EdgeInsets.all(2),
-            child: const Text(
-              '48',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          // allow null
-          null,
-          // Default Motion Badge Widget with indicator only
-          const MotionBadgeWidget(
-            isIndicator: true,
-            color: Colors.red, // optional, default to Colors.red
-            size: 5, // optional, default to 5,
-            show: true, // true / false
-          ),
-        ],*/
         tabSize: 50,
         tabBarHeight: 55,
         textStyle: const TextStyle(
@@ -139,39 +106,6 @@ class _ScaffoldPageState extends State<ScaffoldPage> with TickerProviderStateMix
           });
         },
       ),
-      
-      /*
-      BottomNavigationBar(
-        unselectedItemColor: Colors.grey.shade400,
-        selectedItemColor: mainTheme,
-        unselectedLabelStyle: const TextStyle(color: Colors.grey),
-        selectedLabelStyle: TextStyle(color: mainTheme),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_filled),
-            label: '首页',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.queue_music_rounded),
-            label: '推荐',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.generating_tokens),
-            label: '生成',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.miscellaneous_services_rounded),
-            label: '设置',
-          ),
-        ],
-        currentIndex: currentIndex,
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
-      ),
-      */
     );
   }
 }

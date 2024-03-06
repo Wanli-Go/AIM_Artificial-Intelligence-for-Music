@@ -30,7 +30,6 @@ class GlobalMusic {
     globalSource = AssetSource(newMusic.file);
     globalAudioPlayer.play(globalSource);
     globalPlayerState = PlayerState.playing;
-
   }
 
   static Source globalSource = AssetSource('audio/silence.mp3');
@@ -38,6 +37,6 @@ class GlobalMusic {
   static Duration globalPosition = Duration.zero;
 
   // Creating a variable for the total duration of the audio
-  static Duration globalDuration = Duration.zero;
+  static Duration globalDuration = const Duration(seconds: 3);
 
 }

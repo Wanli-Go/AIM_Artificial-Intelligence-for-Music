@@ -39,6 +39,7 @@ dependencies:
   sleek_circular_slider: any
   particles_flutter: ^0.1.4
   http: any
+  percent_indicator: ^3.0.1
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
