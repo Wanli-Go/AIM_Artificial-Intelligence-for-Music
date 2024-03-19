@@ -7,11 +7,10 @@ import 'package:music_therapy/view/HomePage.dart';
 import 'package:music_therapy/view/PersonalPage.dart';
 import 'package:music_therapy/view/RecommendSongListPage.dart';
 
-
 import 'component/SideBar.dart';
 import 'view/GeneratePage.dart';
 
-  /*
+/*
 
   ScaffoldPage contains the scaffold that is used throughout the App.
 
@@ -23,7 +22,7 @@ import 'view/GeneratePage.dart';
     holds the current page in pageList.
 
   */
-  
+
 class ScaffoldPage extends StatefulWidget {
   const ScaffoldPage({super.key});
 
@@ -31,14 +30,14 @@ class ScaffoldPage extends StatefulWidget {
   _ScaffoldPageState createState() => _ScaffoldPageState();
 }
 
-class _ScaffoldPageState extends State<ScaffoldPage> with TickerProviderStateMixin{
-  
+class _ScaffoldPageState extends State<ScaffoldPage>
+    with TickerProviderStateMixin {
   MotionTabBarController? _motionTabBarController;
 
   @override
   void initState() {
     super.initState();
-    
+
     _motionTabBarController = MotionTabBarController(
       initialIndex: 0,
       length: 4,
@@ -65,26 +64,41 @@ class _ScaffoldPageState extends State<ScaffoldPage> with TickerProviderStateMix
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 252, 245, 243),
-        title: Text('音乐疗愈助手 AIM', style: TextStyle(color: Colors.grey.shade800),),
+        title: Text(
+          '音乐疗愈助手 AIM',
+          style: TextStyle(color: mainTheme, fontSize: 16.5, shadows: [
+            Shadow(
+              color: mainTheme.withOpacity(0.2),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            )
+          ]),
+        ),
         actions: const [
-          Disc()
+          Disc(
+            scaleFactor: 0.8,
+          )
         ],
-        iconTheme: IconThemeData(color: Colors.deepOrange.shade700),
+        iconTheme: IconThemeData(color: mainTheme),
       ),
       body: TabBarView(
-        physics: const NeverScrollableScrollPhysics(), // swipe navigation handling is not supported
-        controller: _motionTabBarController,
-        children: _pageList
-      ),
-
+          physics:
+              const NeverScrollableScrollPhysics(), // swipe navigation handling is not supported
+          controller: _motionTabBarController,
+          children: _pageList),
       drawer: const SideBar(),
-
       bottomNavigationBar: MotionTabBar(
-        controller: _motionTabBarController, // Add this controller if you need to change your tab programmatically
+        controller:
+            _motionTabBarController, // Add this controller if you need to change your tab programmatically
         initialSelectedTab: "首页",
         useSafeArea: true, // default: true, apply safe area wrapper
         labels: const ["首页", "推荐", "生成", "设置"],
-        icons: const [Icons.home_filled, Icons.queue_music_rounded, Icons.generating_tokens, Icons.miscellaneous_services_rounded],
+        icons: const [
+          Icons.home_filled,
+          Icons.queue_music_rounded,
+          Icons.generating_tokens,
+          Icons.miscellaneous_services_rounded
+        ],
         // optional badges, length must be same with labels
         badges: const [null, null, null, null],
         tabSize: 50,

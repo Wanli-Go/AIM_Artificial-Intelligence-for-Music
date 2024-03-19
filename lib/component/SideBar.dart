@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:music_therapy/theme.dart';
 import 'package:music_therapy/view/FavoriteMusicListPage.dart';
 
 import '../view/SongListPage.dart';
@@ -11,13 +12,17 @@ class SideBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      width: 0.67 * MediaQuery.of(context).size.width,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          const UserAccountsDrawerHeader(
-            accountName: Text('清心'),
-            accountEmail: Text('qingxin3142@163.com'),
-            currentAccountPicture: CircleAvatar(
+          UserAccountsDrawerHeader(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [Colors.blue, mainTheme])
+            ),
+            accountName: const Text('清心'),
+            accountEmail: const Text('qingxin3142@163.com'),
+            currentAccountPicture: const CircleAvatar(
               backgroundImage: NetworkImage('https://picsum.photos/id/114/200/200'),
             ),
           ),

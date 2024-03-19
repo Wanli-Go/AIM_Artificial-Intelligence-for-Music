@@ -6,7 +6,8 @@ import 'dart:math' as math;
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class Disc extends StatefulWidget {
-  const Disc({super.key});
+  final double scaleFactor;
+  const Disc({super.key, required this.scaleFactor});
 
   @override
   State<Disc> createState() => _DiscState();
@@ -72,13 +73,13 @@ class _DiscState extends State<Disc> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return CircularPercentIndicator(
-      radius: 50.0,
+      radius: 50.0 * widget.scaleFactor,
       percent: position.inMilliseconds / duration.inMilliseconds,
       progressColor: const Color.fromARGB(159, 255, 89, 0),
       center: Transform.rotate(
         angle: getAngle(),
         child: CircleAvatar(
-          radius: 22,
+          radius: 22 * widget.scaleFactor,
           // 使用网络图片，传入music的image属性
           backgroundImage: NetworkImage(music.image),
         ),

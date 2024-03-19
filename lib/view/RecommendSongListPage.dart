@@ -23,7 +23,7 @@ class _RecommendSongListPageState extends State<RecommendSongListPage> {
       // 获取当前的滚动位置
       double position = _pageController.position.pixels;
       // 获取每个图片的高度，假设为 200 像素
-      double itemHeight = 200;
+      double itemHeight = 150;
       // 计算当前选中的图片的索引，根据滚动位置和图片高度进行四舍五入
       int index = (position / itemHeight).round();
       // 如果索引与 _selectedIndex 不同，说明图片已经切换，调用 _updateSelection 方法，传入当前的索引
@@ -132,7 +132,7 @@ class _RecommendSongListPageState extends State<RecommendSongListPage> {
           width: 5,
         ),
         SizedBox(
-          width: 200,
+          width: 150,
           height: MediaQuery.of(context).size.height,
           child: ListView.builder(
             padding: EdgeInsets.only(
@@ -154,8 +154,8 @@ class _RecommendSongListPageState extends State<RecommendSongListPage> {
                     borderRadius: BorderRadius.circular(20),
                     child: Image.network(
                       fakeMusicList[index].image,
-                      width: 200,
-                      height: 180,
+                      width: 150,
+                      height: 135,
                       fit: BoxFit.cover,
                     ),
                   ),

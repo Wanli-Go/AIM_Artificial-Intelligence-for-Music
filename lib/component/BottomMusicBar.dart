@@ -90,7 +90,7 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
             // Define the linear gradient
             gradient: LinearGradient(
               // Colors of the gradient: white at the top, light grey at the bottom
-              colors: [Colors.white, Color.fromARGB(255, 255, 242, 237)],
+              colors: [Colors.white, Color.fromARGB(255, 251, 236, 231)],
               // Start of the gradient
               begin: Alignment.topCenter,
               // End of the gradient
@@ -103,7 +103,7 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Divider(thickness: 2, color: Colors.grey.shade300),
+                Divider(thickness: 1.8, height: 0, color: Colors.grey.shade300),
                 const SizedBox(
                   height: 3,
                 ),
@@ -114,7 +114,9 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     // 定义子组件列表
                     children: [
-                      const Disc(),
+                      const Disc(
+                        scaleFactor: 1.00,
+                      ),
 
                       // 显示歌曲名称和歌手，使用Column布局，垂直排列子组件
                       Column(
@@ -126,18 +128,24 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
                           Text(
                             music.name,
                             // 设置文字样式，字体大小为16，加粗
-                            style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                shadows: [
+                                  Shadow(
+                                    color: mainTheme.withOpacity(0.3),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  )
+                                ],
+                                color: mainTheme),
                           ),
 
                           // 显示歌手，使用Text组件，传入music的singer属性
                           Text(
                             music.singer,
                             // 设置文字样式，字体大小为14，颜色为灰色
-                            style: const TextStyle(
-                                fontSize: 12, color: Colors.grey),
+                            style: const TextStyle(fontSize: 10),
                           ),
                         ],
                       ),

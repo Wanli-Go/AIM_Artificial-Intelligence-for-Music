@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_therapy/login/login.dart';
 import 'package:music_therapy/theme.dart';
 import 'package:music_therapy/view/FavoriteMusicListPage.dart';
 import 'package:music_therapy/ScaffoldPage.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
           '/songList': (context) => const SongListPage(),
           '/favoriteMusic': (context) => const FavoriteMusicListPage(),
         },
-      home: const ScaffoldPage()
+      home: const LoginScreen()
     );
   }
 }

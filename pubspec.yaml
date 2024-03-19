@@ -40,6 +40,7 @@ dependencies:
   particles_flutter: ^0.1.4
   http: any
   percent_indicator: ^3.0.1
+  flutter_svg: ^2.0.9
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
