@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:music_therapy/theme.dart';
+import 'package:music_therapy/app_theme.dart';
 
 class LoginTheme {
   static const textFormFieldBorder = OutlineInputBorder(

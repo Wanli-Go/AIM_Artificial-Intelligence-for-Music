@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:motion_tab_bar/MotionTabBar.dart';
 import 'package:motion_tab_bar/MotionTabBarController.dart';
-import 'package:music_therapy/component/Disc.dart';
-import 'package:music_therapy/theme.dart';
-import 'package:music_therapy/view/HomePage.dart';
-import 'package:music_therapy/view/PersonalPage.dart';
-import 'package:music_therapy/view/RecommendSongListPage.dart';
-
-import 'component/SideBar.dart';
-import 'view/GeneratePage.dart';
+import 'package:music_therapy/main/component/Disc.dart';
+import 'package:music_therapy/app_theme.dart';
+import 'package:music_therapy/main/view/HomePage.dart';
+import 'package:music_therapy/main/view/PersonalPage.dart';
+import 'package:music_therapy/main/view/RecommendSongListPage.dart';
+import 'GeneratePage.dart';
 
 /*
 
@@ -61,18 +59,30 @@ class _ScaffoldPageState extends State<ScaffoldPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       backgroundColor: Colors.white,
+
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: const Color.fromARGB(255, 252, 245, 243),
-        title: Text(
-          '音乐疗愈助手 AIM',
-          style: TextStyle(color: mainTheme, fontSize: 16.5, shadows: [
-            Shadow(
-              color: mainTheme.withOpacity(0.2),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            )
-          ]),
+        title: Row(
+          children: 
+          [
+            const Icon(Icons.headset_outlined),
+            SizedBox(
+              width: 15,
+            ),
+            Text(
+              '音乐疗愈助手 AIM',
+              style: TextStyle(color: mainTheme, fontSize: 16.5, shadows: [
+                Shadow(
+                  color: mainTheme.withOpacity(0.2),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                )
+              ]), 
+            ),
+          ],
         ),
         actions: const [
           Disc(
@@ -80,13 +90,17 @@ class _ScaffoldPageState extends State<ScaffoldPage>
           )
         ],
         iconTheme: IconThemeData(color: mainTheme),
+
       ),
+
       body: TabBarView(
           physics:
               const NeverScrollableScrollPhysics(), // swipe navigation handling is not supported
           controller: _motionTabBarController,
           children: _pageList),
-      drawer: const SideBar(),
+
+      drawer: null,
+
       bottomNavigationBar: MotionTabBar(
         controller:
             _motionTabBarController, // Add this controller if you need to change your tab programmatically

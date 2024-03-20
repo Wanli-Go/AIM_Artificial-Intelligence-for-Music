@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:music_therapy/login/login.dart';
-import 'package:music_therapy/theme.dart';
-import 'package:music_therapy/view/FavoriteMusicListPage.dart';
-import 'package:music_therapy/ScaffoldPage.dart';
-import 'package:music_therapy/view/SongListPage.dart';
+import 'package:music_therapy/app_theme.dart';
+import 'package:music_therapy/main/view/FavoriteMusicListPage.dart';
+import 'package:music_therapy/main/view/SongListPage.dart';
 
 /*
 Entry to application.
 
 Defines theme data and some routes.
 
-Directs to the ScaffoldPage.
+Directs to the LoginScreen. See the Login.dart file for more details.
 */
 void main() {
   runApp(const MyApp());

@@ -1,7 +1,7 @@
 // 引入flutter相关的库
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:music_therapy/service/MusicService.dart';
+import 'package:music_therapy/main/service/MusicService.dart';
 
 import '../model/GlobalMusic.dart';
 import '../model/Music.dart';

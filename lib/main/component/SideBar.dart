@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:music_therapy/theme.dart';
-import 'package:music_therapy/view/FavoriteMusicListPage.dart';
+import 'package:music_therapy/app_theme.dart';
+import 'package:music_therapy/main/view/FavoriteMusicListPage.dart';
 
 import '../view/SongListPage.dart';
 class SideBar extends StatelessWidget {

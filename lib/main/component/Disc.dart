@@ -1,7 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:music_therapy/model/GlobalMusic.dart';
-import 'package:music_therapy/model/Music.dart';
+import 'package:music_therapy/main/model/GlobalMusic.dart';
+import 'package:music_therapy/main/model/Music.dart';
 import 'dart:math' as math;
 import 'package:percent_indicator/circular_percent_indicator.dart';
 

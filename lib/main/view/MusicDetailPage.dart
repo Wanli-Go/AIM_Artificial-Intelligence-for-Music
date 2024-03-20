@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_scatter/flutter_scatter.dart';
 import 'package:kg_charts/kg_charts.dart';
-import 'package:music_therapy/model/Music.dart';
-import 'package:music_therapy/service/MusicService.dart';
+import 'package:music_therapy/main/model/Music.dart';
+import 'package:music_therapy/main/service/MusicService.dart';
 
 import '../model/flutter_hashtags.dart';
 

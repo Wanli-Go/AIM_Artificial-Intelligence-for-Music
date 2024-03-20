@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:music_therapy/model/GlobalMusic.dart';
-import 'package:music_therapy/model/Music.dart';
+import 'package:music_therapy/main/model/GlobalMusic.dart';
+import 'package:music_therapy/main/model/Music.dart';
 class GenericMusicList extends StatelessWidget {
   final List<Music> list;
   final double heightPercentage;
-  final String headerline;
   const GenericMusicList(
       {super.key,
       required this.list,
-      required this.heightPercentage,
-      required this.headerline});
+      required this.heightPercentage,});
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +18,6 @@ class GenericMusicList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            headerline,
-            style: const TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
           Expanded(
             child: ListView.separated(
               separatorBuilder: (context, index) => Divider(
@@ -40,6 +31,7 @@ class GenericMusicList extends StatelessWidget {
                 return ListTile(
                   leading: SizedBox(
                     height: 52,
+                    width: 52,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
                       child: Image.network(

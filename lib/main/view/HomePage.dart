@@ -1,43 +1,61 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:music_therapy/component/BottomMusicBar.dart';
-import 'package:music_therapy/component/GenericMusicList.dart';
-import 'package:music_therapy/model/Music.dart';
-import 'package:music_therapy/service/MusicService.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:music_therapy/app_theme.dart';
+import 'package:music_therapy/main/component/BottomMusicBar.dart';
+import 'package:music_therapy/main/component/GenericMusicList.dart';
+import 'package:music_therapy/main/model/Music.dart';
+import 'package:music_therapy/main/service/MusicService.dart';
 import 'package:particles_flutter/particles_flutter.dart';
 
 class HomePage extends StatefulWidget {
   final List<Music> _recentlyPlayedMusicList = [];
+  final List<Music> _likedMusicList = [];
   HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  final RecentlyPlayedMusicService recentlyPlayedMusicService =
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  late TabController _tabController;
+
+  final RecentlyPlayedMusicService homePageMusicService =
       RecentlyPlayedMusicService();
 
   // Added variables to track loading state
-  bool _isLoadingRecentlyPlayedMusic = true;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
 
+    _tabController = TabController(length: 2, vsync: this);
+
     // Fetch recently played music only if the list is empty
     // This check prevents refetching data when navigating back to the page
-    if (widget._recentlyPlayedMusicList.isEmpty) {
-      recentlyPlayedMusicService.getRecent("1", 0, 10).then((value) {
+    if (widget._recentlyPlayedMusicList.isEmpty ||
+        widget._likedMusicList.isEmpty) {
+      homePageMusicService.getRecent("1", 0, 10).then((value) {
         if (mounted) {
           setState(() {
             widget._recentlyPlayedMusicList.addAll(value);
-            _isLoadingRecentlyPlayedMusic = false; // Update loading state
+            _isLoading = false; // Update loading state
+          });
+        }
+      });
+      homePageMusicService.getLiked("1", 0, 10).then((value) {
+        if (mounted) {
+          setState(() {
+            widget._likedMusicList.addAll(value);
+            _isLoading = false; // Update loading state
           });
         }
       });
     } else {
       // If the list is already populated, simply set loading to false
-      _isLoadingRecentlyPlayedMusic = false;
+      _isLoading = false;
     }
   }
 
@@ -53,11 +71,11 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   _buildParticleView(),
 
-                  const SizedBox(height: 5),
-
                   // Recently Played Music Section
-                  _isLoadingRecentlyPlayedMusic
-                      ? const Center(child:CircularProgressIndicator()) // Show loading indicator
+                  _isLoading
+                      ? const Center(
+                          child:
+                              CircularProgressIndicator()) // Show loading indicator
                       : _buildRecentlyPlayedMusicSection(),
                 ],
               ),
@@ -73,6 +91,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -138,6 +157,53 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildRecentlyPlayedMusicSection() {
-    return GenericMusicList(list: widget._recentlyPlayedMusicList, heightPercentage: 0.35, headerline: "常听疗愈音乐",);
+    return Column(
+      children: [
+        TabBar(
+          indicator: BoxDecoration(
+            color: Colors.white, // Light grey background
+            border: Border.all(
+              color: mainTheme.withOpacity(0.7),
+              width: 1,
+            ),
+            borderRadius:
+                const BorderRadius.all(Radius.circular(10)), // Rounded corners
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.6),
+                spreadRadius: 0.5,
+                blurRadius: 0.7,
+                offset: Offset(0, -0.5), // Changes shadow position
+              ),
+            ],
+          ),
+          labelColor: mainTheme,
+          tabs: const [
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 25),
+              child: Tab(
+                text: "常听疗愈音乐",
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 38, right: 38),
+              child: Tab(
+                text: "收藏音乐",
+              ),
+            )
+          ],
+          controller: _tabController,
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.3,
+          child: TabBarView(controller: _tabController, children: [
+            GenericMusicList(
+                list: widget._recentlyPlayedMusicList, heightPercentage: 0.35),
+            GenericMusicList(
+                list: widget._recentlyPlayedMusicList, heightPercentage: 0.35),
+          ]),
+        )
+      ],
+    );
   }
 }

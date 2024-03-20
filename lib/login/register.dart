@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:music_therapy/login/login.dart';
-import 'package:music_therapy/login/login_service.dart';
+import 'package:music_therapy/login/utils/login_service.dart';
 import 'package:music_therapy/login/utils/login_regex.dart';
-import 'package:music_therapy/theme.dart';
+import 'package:music_therapy/app_theme.dart';
 
 import 'components/app_text_form_field.dart';
 import 'components/gradient_background.dart';
 
-import 'login_themes.dart';
+import 'utils/login_themes.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -235,6 +235,11 @@ class _RegisterPageState extends State<RegisterPage> {
                           width: 100,
                           child: FilledButton(
                             style: LoginTheme.clickableButtonStyle,
+
+
+                            /*
+                            // IMPORTANT: Register Button Submitted Logic
+                            */
                             onPressed: isValid
                                 ? () async {
                                     showDialog(
@@ -274,6 +279,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                     }
                                   }
                                 : null,
+
+
+                                
                             child: const Text("注册", style: LoginTheme.clickableTextStyle,),
                           ),
                         ),

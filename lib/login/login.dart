@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:music_therapy/ScaffoldPage.dart';
+import 'package:music_therapy/main/view/main_scaffold.dart';
 import 'package:music_therapy/login/components/app_text_form_field.dart';
 import 'package:music_therapy/login/components/gradient_background.dart';
 import 'package:music_therapy/login/utils/login_service.dart';
 import 'package:music_therapy/login/utils/login_themes.dart';
 import 'package:music_therapy/login/register.dart';
 import 'package:music_therapy/login/utils/login_regex.dart';
-import 'package:music_therapy/theme.dart';
+import 'package:music_therapy/app_theme.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, this.existingName, this.existingPassword});
@@ -157,6 +157,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: 120,
                           child: FilledButton(
                             style: LoginTheme.clickableButtonStyle,
+
+                            /*
+                            // IMPORTANT: Login Button Submitted Logic
+                            */
                             onPressed: isValid
                                 ? () async {
                                     passwordController.clear();
@@ -196,6 +200,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     }
                                   }
                                 : null,
+
+
+
                             child: const Text(
                               "登陆",
                               style: LoginTheme.clickableTextStyle,

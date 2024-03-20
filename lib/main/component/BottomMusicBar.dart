@@ -1,8 +1,8 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:music_therapy/component/Disc.dart';
-import 'package:music_therapy/theme.dart';
-import 'package:music_therapy/view/MusicPlayPage.dart';
+import 'package:music_therapy/main/component/Disc.dart';
+import 'package:music_therapy/app_theme.dart';
+import 'package:music_therapy/main/view/MusicPlayPage.dart';
 
 import '../model/GlobalMusic.dart';
 import '../model/Music.dart';

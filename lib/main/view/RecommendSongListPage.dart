@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:music_therapy/model/Music.dart'; // Make sure to import your Music model
-import 'package:music_therapy/theme.dart';
+import 'package:music_therapy/main/model/Music.dart'; // Make sure to import your Music model
+import 'package:music_therapy/app_theme.dart';
 
 class RecommendSongListPage extends StatefulWidget {
   const RecommendSongListPage({Key? key}) : super(key: key);
