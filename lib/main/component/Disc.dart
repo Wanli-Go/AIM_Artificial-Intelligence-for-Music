@@ -7,14 +7,14 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class Disc extends StatefulWidget {
   final double scaleFactor;
-  const Disc({super.key, required this.scaleFactor});
+  final AnimationController controller;
+  const Disc({super.key, required this.scaleFactor, required this.controller});
 
   @override
   State<Disc> createState() => _DiscState();
 }
 
 class _DiscState extends State<Disc> with SingleTickerProviderStateMixin {
-  AnimationController? controller;
   Music music = GlobalMusic.music;
   AudioPlayer audioPlayer = GlobalMusic.globalAudioPlayer;
   // 创建一个音频播放状态变量
@@ -29,10 +29,6 @@ class _DiscState extends State<Disc> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(
-      duration: const Duration(seconds: 11),
-      vsync: this,
-    )..repeat();
     audioPlayer.onPlayerStateChanged.listen((state) {
       if (mounted) {
         setState(() {
@@ -59,14 +55,8 @@ class _DiscState extends State<Disc> with SingleTickerProviderStateMixin {
     });
   }
 
-  @override
-  void dispose() {
-    controller!.dispose();
-    super.dispose();
-  }
-
   double getAngle() {
-    var value = controller?.value ?? 0;
+    var value = widget.controller.value;
     return value * 2 * math.pi;
   }
 

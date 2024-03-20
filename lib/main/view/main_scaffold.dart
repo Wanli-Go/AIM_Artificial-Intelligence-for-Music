@@ -4,6 +4,7 @@ import 'package:motion_tab_bar/MotionTabBar.dart';
 import 'package:motion_tab_bar/MotionTabBarController.dart';
 import 'package:music_therapy/main/component/Disc.dart';
 import 'package:music_therapy/app_theme.dart';
+import 'package:music_therapy/main/model/controller_provider.dart';
 import 'package:music_therapy/main/view/HomePage.dart';
 import 'package:music_therapy/main/view/PersonalPage.dart';
 import 'package:music_therapy/main/view/RecommendSongListPage.dart';
@@ -85,11 +86,12 @@ class _ScaffoldPageState extends State<ScaffoldPage>
             ),
           ],
         ),
-        actions: const [
+        actions: [
           Hero(
             tag: "player",
             child: Disc(
               scaleFactor: 0.8,
+              controller: globalController!,
             ),
           )
         ],

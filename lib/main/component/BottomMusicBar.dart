@@ -2,6 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_therapy/main/component/Disc.dart';
 import 'package:music_therapy/app_theme.dart';
+import 'package:music_therapy/main/model/controller_provider.dart';
 import 'package:music_therapy/main/view/MusicPlayPage.dart';
 
 import '../model/GlobalMusic.dart';
@@ -114,8 +115,9 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     // 定义子组件列表
                     children: [
-                      const Disc(
+                      Disc(
                         scaleFactor: 1.00,
+                        controller: globalController!,
                       ),
 
                       // 显示歌曲名称和歌手，使用Column布局，垂直排列子组件
@@ -198,8 +200,10 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
     // 如果音频已经在播放，就暂停
     if (playerState == PlayerState.playing) {
       await audioPlayer.pause();
+      stopsAnimation();
     } else {
       await audioPlayer.play(GlobalMusic.globalSource);
+      startAnimation();
     }
   }
 }

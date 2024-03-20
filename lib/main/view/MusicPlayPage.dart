@@ -2,7 +2,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_therapy/main/component/Disc.dart';
-import 'package:music_therapy/main/service/MusicService.dart';
+import 'package:music_therapy/main/model/controller_provider.dart';
 
 import '../model/GlobalMusic.dart';
 import '../model/Music.dart';
@@ -63,8 +63,10 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
     // 如果音频已经在播放，就暂停
     if (playerState == PlayerState.playing) {
       await audioPlayer.pause();
+      stopsAnimation();
     } else {
       await audioPlayer.play(GlobalMusic.globalSource);
+      startAnimation();
     }
   }
 
@@ -92,10 +94,11 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // 显示歌曲图片
-            const Hero(
+            Hero(
               tag: "player",
               child: Disc(
-                scaleFactor: 4,
+                scaleFactor: 3,
+                controller: globalController!
               ),
             ),
             // 显示歌曲名称和歌手
