@@ -39,30 +39,14 @@ class _PersonalPageState extends State<PersonalPage> {
   }
 
   Widget _buildHeader() {
-    return Neumorphic(
-      style: NeumorphicStyle(
-          depth: 10, // Adjust the depth of the Neumorphic effect
-          shape: NeumorphicShape.concave,
-          boxShape: NeumorphicBoxShape.roundRect(
-              BorderRadius.circular(12)), // Rounded corners
-          intensity: 0.5, // Intensity of shadow
-          lightSource: LightSource.topRight, // Light source for shadow
-          color: Colors.deepOrange),
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
+    return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [Colors.blue, mainTheme])),
       child: Row(
         children: [
-          Neumorphic(
-            style: const NeumorphicStyle(
-              shape: NeumorphicShape.convex,
-              boxShape: NeumorphicBoxShape.circle(),
-              depth: 2,
-              intensity: 0.3,
-            ),
-            child: CircleAvatar(
-              radius: 40,
-              backgroundImage: NetworkImage(_avatar),
-            ),
+          CircleAvatar(
+            radius: 40,
+            backgroundImage: NetworkImage(_avatar),
           ),
           const SizedBox(
             width: 20,

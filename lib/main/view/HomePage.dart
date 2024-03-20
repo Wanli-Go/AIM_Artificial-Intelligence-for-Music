@@ -159,40 +159,47 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget _buildRecentlyPlayedMusicSection() {
     return Column(
       children: [
-        TabBar(
-          indicator: BoxDecoration(
-            color: Colors.white, // Light grey background
-            border: Border.all(
-              color: mainTheme.withOpacity(0.7),
-              width: 1,
+        SizedBox(
+          child: TabBar(
+            dividerHeight: 0.5,
+            labelStyle: TextStyle(
+              fontFamily: "Starrail",
+              fontWeight: FontWeight.bold
             ),
-            borderRadius:
-                const BorderRadius.all(Radius.circular(10)), // Rounded corners
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.6),
-                spreadRadius: 0.5,
-                blurRadius: 0.7,
-                offset: Offset(0, -0.5), // Changes shadow position
+            indicator: BoxDecoration(
+              color: Colors.white, // Light grey background
+              border: Border.all(
+                color: mainTheme.withOpacity(0.7),
+                width: 1,
               ),
+              borderRadius:
+                  const BorderRadius.all(Radius.circular(10)), // Rounded corners
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.6),
+                  spreadRadius: 0.5,
+                  blurRadius: 0.7,
+                  offset: Offset(0, -0.5), // Changes shadow position
+                ),
+              ],
+            ),
+            labelColor: mainTheme,
+            tabs: const [
+              Padding(
+                padding: EdgeInsets.only(left: 34, right: 34),
+                child: Tab(
+                  text: "常听音乐",
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 34, right: 34),
+                child: Tab(
+                  text: "收藏音乐",
+                ),
+              )
             ],
+            controller: _tabController,
           ),
-          labelColor: mainTheme,
-          tabs: const [
-            Padding(
-              padding: EdgeInsets.only(left: 25, right: 25),
-              child: Tab(
-                text: "常听疗愈音乐",
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 38, right: 38),
-              child: Tab(
-                text: "收藏音乐",
-              ),
-            )
-          ],
-          controller: _tabController,
         ),
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.3,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:motion_tab_bar/MotionTabBar.dart';
 import 'package:motion_tab_bar/MotionTabBarController.dart';
 import 'package:music_therapy/main/component/Disc.dart';
@@ -85,8 +86,11 @@ class _ScaffoldPageState extends State<ScaffoldPage>
           ],
         ),
         actions: const [
-          Disc(
-            scaleFactor: 0.8,
+          Hero(
+            tag: "player",
+            child: Disc(
+              scaleFactor: 0.8,
+            ),
           )
         ],
         iconTheme: IconThemeData(color: mainTheme),

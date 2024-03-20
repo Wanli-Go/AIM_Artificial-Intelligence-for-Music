@@ -82,7 +82,7 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
             builder: (_) =>
-                MusicPlayPage(music: GlobalMusic.music), // 将数据传递给下一个页面
+                MusicPlayPage(), // 将数据传递给下一个页面
           ));
         },
         child: Container(
