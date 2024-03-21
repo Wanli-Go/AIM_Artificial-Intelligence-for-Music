@@ -24,7 +24,7 @@ class LoginService {
       } else {
         return 'Error: Status Code ${response.statusCode}';
       }
-    } on Exception catch (e) {
+    } on Exception {
       return "1";
       // FIXME: This is debug code without error handling.
     }
@@ -49,7 +49,7 @@ class LoginService {
       } else {
         return 'Error: Status Code ${response.statusCode}';
       }
-    } on Exception catch (e) {
+    } on Exception {
       return "1";
       // FIXME: This is debug code without error handling.
     }

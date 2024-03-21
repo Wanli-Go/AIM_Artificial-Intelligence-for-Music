@@ -149,7 +149,7 @@ class _MusicSheetPageState extends State<MusicSheetPage> {
           ),
         onTap: (){
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (_) => MusicPlayPage()
+            builder: (_) => const MusicPlayPage()
           )
           );
         },

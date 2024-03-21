@@ -42,7 +42,11 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin{
           '/songList': (context) => const SongListPage(),
           '/favoriteMusic': (context) => const FavoriteMusicListPage(),
         },
-      home: const LoginScreen()
+      home: const LoginScreen(
+        existingName: "12312341234",
+        existingPassword: "A123der123foo",
+      )
+      // TODO: remove existing name and password
     );
   }
 }

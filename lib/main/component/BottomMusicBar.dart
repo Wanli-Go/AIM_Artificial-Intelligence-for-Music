@@ -29,7 +29,7 @@ State Management:
 class BottomMusicBar extends StatefulWidget {
   // 定义一个Music对象作为参数
   // 定义一个构造函数，接收music参数
-  BottomMusicBar({super.key});
+  const BottomMusicBar({super.key});
 
   @override
   _BottomMusicBarState createState() => _BottomMusicBarState();
@@ -83,7 +83,7 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
             builder: (_) =>
-                MusicPlayPage(), // 将数据传递给下一个页面
+                const MusicPlayPage(), // 将数据传递给下一个页面
           ));
         },
         child: Container(

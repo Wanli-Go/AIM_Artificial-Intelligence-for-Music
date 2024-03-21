@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_therapy/main/model/GlobalMusic.dart';
 import 'package:music_therapy/main/model/Music.dart';
+
 class GenericMusicList extends StatelessWidget {
   final List<Music> list;
   final double heightPercentage;

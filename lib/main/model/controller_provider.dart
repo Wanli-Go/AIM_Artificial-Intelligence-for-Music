@@ -5,7 +5,7 @@ AnimationController? globalController;
 
 void initializeController(TickerProvider vsync) {
   globalController = AnimationController(
-    duration: const Duration(seconds: 11),
+    duration: const Duration(seconds: 15),
     vsync: vsync,
   );
   globalController!.repeat();

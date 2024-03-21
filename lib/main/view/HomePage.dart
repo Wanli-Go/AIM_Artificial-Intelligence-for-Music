@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:music_therapy/app_theme.dart';
 import 'package:music_therapy/main/component/BottomMusicBar.dart';
@@ -84,7 +82,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ),
 
         // A bottom music bar to show currently playing music
-        BottomMusicBar()
+        const BottomMusicBar()
       ],
     );
   }
@@ -106,7 +104,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               awayRadius: 80,
               numberOfParticles: 130,
               speedOfParticles: 0.5,
-              height: MediaQuery.of(context).size.height * 0.35,
+              height: MediaQuery.of(context).size.height * 0.30,
               width: MediaQuery.of(context).size.width,
               onTapAnimation: true,
               particleColor: Colors.white.withAlpha(150),
@@ -128,8 +126,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
           Center(
             child: SizedBox(
-              height: 250,
-              width: 250, // Set a fixed width to make the image circular
+              height: 220,
+              width: 220, // Set a fixed width to make the image circular
               child: ClipOval(
                 child: ShaderMask(
                   shaderCallback: (Rect bounds) {
@@ -162,7 +160,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         SizedBox(
           child: TabBar(
             dividerHeight: 0.5,
-            labelStyle: TextStyle(
+            labelStyle: const TextStyle(
               fontFamily: "Starrail",
               fontWeight: FontWeight.bold
             ),
@@ -179,7 +177,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   color: Colors.grey.withOpacity(0.6),
                   spreadRadius: 0.5,
                   blurRadius: 0.7,
-                  offset: Offset(0, -0.5), // Changes shadow position
+                  offset: const Offset(0, -0.5), // Changes shadow position
                 ),
               ],
             ),
@@ -202,7 +200,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
         ),
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.3,
+          height: MediaQuery.of(context).size.height * 0.33,
           child: TabBarView(controller: _tabController, children: [
             GenericMusicList(
                 list: widget._recentlyPlayedMusicList, heightPercentage: 0.35),

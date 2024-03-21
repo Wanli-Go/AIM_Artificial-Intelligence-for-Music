@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:motion_tab_bar/MotionTabBar.dart';
 import 'package:motion_tab_bar/MotionTabBarController.dart';
 import 'package:music_therapy/main/component/Disc.dart';
 import 'package:music_therapy/app_theme.dart';
 import 'package:music_therapy/main/model/controller_provider.dart';
 import 'package:music_therapy/main/view/HomePage.dart';
+import 'package:music_therapy/main/view/MusicPlayPage.dart';
 import 'package:music_therapy/main/view/PersonalPage.dart';
 import 'package:music_therapy/main/view/RecommendSongListPage.dart';
 import 'GeneratePage.dart';
@@ -66,32 +66,39 @@ class _ScaffoldPageState extends State<ScaffoldPage>
 
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: const Color.fromARGB(255, 252, 245, 243),
+        backgroundColor: appBarTheme,
         title: Row(
           children: 
           [
             const Icon(Icons.headset_outlined),
-            SizedBox(
+            const SizedBox(
               width: 15,
             ),
             Text(
               '音乐疗愈助手 AIM',
-              style: TextStyle(color: mainTheme, fontSize: 16.5, shadows: [
-                Shadow(
-                  color: mainTheme.withOpacity(0.2),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                )
-              ]), 
+              style: appBarTextStyle,
             ),
           ],
         ),
+
         actions: [
-          Hero(
-            tag: "player",
-            child: Disc(
-              scaleFactor: 0.8,
-              controller: globalController!,
+          GestureDetector(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const MusicPlayPage()));
+            },
+            child: Row(
+              children: [
+                Hero(
+                  tag: "player",
+                  child: Disc(
+                    scaleFactor: 0.8,
+                    controller: globalController!,
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+              ],
             ),
           )
         ],
