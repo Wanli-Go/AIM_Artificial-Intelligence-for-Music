@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:music_therapy/main/model/controller_provider.dart';
 
 import 'Music.dart';
 
@@ -13,7 +14,7 @@ class GlobalMusic {
 
   static List<Music> musicList = [_music];
 
-  static int index = 0;
+  static int index = -1;
 
   static Source globalSource = AssetSource('audio/silence.mp3');
 
@@ -29,6 +30,7 @@ class GlobalMusic {
   static set music(Music newMusic) {
     Music.recentPlayedList.insert(0, newMusic);
     globalAudioPlayer.pause();
+    stopsAnimation();
     globalPlayerState = PlayerState.paused;
     _music = newMusic;
     // Update the global source with the new music file
@@ -41,6 +43,7 @@ class GlobalMusic {
     // For example, loading the new source into the audio player
     globalSource = AssetSource(newMusic.file);
     globalAudioPlayer.play(globalSource);
+    startAnimation();
     globalPlayerState = PlayerState.playing;
   }
 

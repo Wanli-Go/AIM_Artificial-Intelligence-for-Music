@@ -16,7 +16,7 @@ class SongListPage extends StatefulWidget {
 class _SongListPageState extends State<SongListPage> {
   // 定义一个列表，用于存储最近播放的歌曲信息
   List<Music> _recentSongs = [];
-  final RecentlyPlayedMusicService musicService=RecentlyPlayedMusicService();
+  final MusicService musicService=MusicService();
   // 定义一个方法，用于从本地存储中获取最近播放的歌曲信息
 
   // 定义一个方法，用于清空最近播放的歌曲信息

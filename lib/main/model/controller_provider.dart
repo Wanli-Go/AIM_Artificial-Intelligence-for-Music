@@ -8,7 +8,6 @@ void initializeController(TickerProvider vsync) {
     duration: const Duration(seconds: 15),
     vsync: vsync,
   );
-  globalController!.repeat();
 }
 
 void disposeController() {

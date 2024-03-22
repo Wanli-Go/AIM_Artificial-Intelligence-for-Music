@@ -1,5 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
-import 'package:music_therapy/app_theme.dart'; // Add this line for Neumorphic design
+import 'package:music_therapy/app_theme.dart';
+import 'package:music_therapy/login/login.dart';
+import 'package:music_therapy/main/component/GenericMusicList.dart';
+import 'package:music_therapy/main/model/Music.dart';
+import 'package:music_therapy/main/model/user_data.dart';
+import 'package:music_therapy/main/service/MusicService.dart';
+import 'package:palette_generator/palette_generator.dart'; // Add this line for Neumorphic design
 
 class PersonalPage extends StatefulWidget {
   const PersonalPage({Key? key}) : super(key: key);
@@ -9,19 +16,45 @@ class PersonalPage extends StatefulWidget {
 }
 
 class _PersonalPageState extends State<PersonalPage> {
-  final String _avatar = 'https://picsum.photos/id/114/200/200'; // Avatar URL
-  final String _nickname = '清心'; // Nickname
-
   // List of items for a more dynamic and modern-looking UI
   final List<Map<String, dynamic>> _items = [
-    {'icon': Icons.access_time_filled, 'title': '最近播放', 'route': '/songList'},
-    {'icon': Icons.favorite, 'title': '我的收藏', 'route': '/favoriteMusic'},
+    {'icon': Icons.access_time_filled, 'title': '最近播放'},
+    {'icon': Icons.favorite, 'title': '我的收藏'},
     {
       'icon': Icons.receipt_outlined,
       'title': '生成记录',
-      'route': '/favoriteMusic'
     },
   ];
+
+  PaletteGenerator? paletteGenerator;
+
+  Future<void> _updatePaletteGenerator() async {
+    paletteGenerator = await PaletteGenerator.fromImageProvider(
+      NetworkImage(UserData.userImage),
+      maximumColorCount: 1,
+    );
+    setState(() {});
+  }
+
+  bool isLoading = false;
+  int pressedIndex = -1;
+  void clickedButton(int index) async {
+    setState(() {
+      isLoading = true;
+      pressedIndex = index;
+    });
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() {
+      isLoading = false;
+      pressedIndex = -1;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _updatePaletteGenerator();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +63,7 @@ class _PersonalPageState extends State<PersonalPage> {
       body: SafeArea(
         child: Column(
           children: [
+            const SizedBox(height: 10,),
             _buildHeader(), // Header section with avatar and nickname
             Expanded(child: _buildMenuList()), // Menu list section
           ],
@@ -40,64 +74,187 @@ class _PersonalPageState extends State<PersonalPage> {
 
   Widget _buildHeader() {
     return Container(
+      margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [Colors.blue, mainTheme])),
+          borderRadius: BorderRadius.circular(20),
+          gradient: LinearGradient(colors: [
+            (paletteGenerator != null)
+                ? (paletteGenerator!.dominantColor?.color) ?? Colors.white
+                : Colors.white,
+            mainTheme
+          ])),
       child: Row(
         children: [
+          const SizedBox(
+            width: 20,
+          ),
           CircleAvatar(
             radius: 40,
-            backgroundImage: NetworkImage(_avatar),
+            backgroundImage: NetworkImage(UserData.userImage),
           ),
           const SizedBox(
             width: 20,
             height: 100,
           ),
           Expanded(
-            child: Text(
-              _nickname,
-              style: TextStyle(
-                color: NeumorphicTheme.defaultTextColor(context),
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  UserData.username,
+                  style: TextStyle(
+                    color: NeumorphicTheme.defaultTextColor(context),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                if(UserData.userIdentity == 1) Container(
+                  decoration: BoxDecoration(
+                    color: mainTheme,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: const [BoxShadow(
+                      color: Colors.redAccent,
+                      spreadRadius: 1,
+                      blurRadius: 1.5,
+                      offset: Offset(0, 0.5), // changes position of shadow
+                    )]
+                  ),
+                  width: 55,
+                  child: Row(
+                    children: [
+                      Icon(Icons.diamond_outlined,),
+                      SizedBox(width: 3,),
+                      Text("VIP")
+                    ],
+                  ),
+                )
+              ],
             ),
           ),
+          IconButton(
+              onPressed: () => {
+                    // TODO: Edit Page
+                  },
+              icon: const Icon(Icons.navigate_next_rounded))
         ],
       ),
     );
   }
 
   Widget _buildMenuList() {
-    return ListView.builder(
-      itemCount: _items.length,
-      itemBuilder: (context, index) {
-        final item = _items[index];
-        return NeumorphicButton(
-          style: NeumorphicStyle(
-              depth: 2, // Inward shadow for a "pressed" effect
-              boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(8)),
-              color: Colors.blueGrey.shade100.withOpacity(0.5)),
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          onPressed: () {
-            Navigator.pushNamed(context, item['route']);
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Icon(item['icon'], color: mainTheme),
-                const SizedBox(width: 20),
-                Text(
-                  item['title'],
-                  style: const TextStyle(fontSize: 18),
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            itemCount: _items.length,
+            itemBuilder: (context, index) {
+              final item = _items[index];
+              return NeumorphicButton(
+                style: NeumorphicStyle(
+                    depth: 2, // Inward shadow for a "pressed" effect
+                    boxShape:
+                        NeumorphicBoxShape.roundRect(BorderRadius.circular(8)),
+                    color: Colors.blueGrey.shade100.withOpacity(0.5)),
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          
+                /* Pressed Logic */
+                onPressed: () async {
+                  clickedButton(index);
+                  String userId = UserData.userId;
+                  final List<Music> musicList = switch (index) {
+                    0 => await MusicService().getRecent(userId, 1, 7),
+                    1 => await MusicService().getLiked(userId, 1, 7),
+                    2 => await MusicService().getGenerated(userId, 1, 7),
+                    int() => throw Exception('Invalid index'),
+                  };
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => Scaffold(
+                        appBar: AppBar(),
+                        body: GenericMusicList(
+                          list: musicList,
+                          heightPercentage: 1,
+                          upperWidget: Container(
+                            padding: const EdgeInsets.all(
+                                8), // Add some padding inside the container
+                            decoration: BoxDecoration(
+                              color: Colors
+                                  .white, // Set the fill color of the container (optional)
+                              border: Border.all(color: mainTheme, width: 2),
+                              borderRadius: BorderRadius.circular(
+                                  12), // Set the border radius for rounded corners
+                            ),
+                            child: Text(
+                              switch (index) {
+                                0 => '最近播放',
+                                1 => '我的收藏',
+                                2 => '生成记录',
+                                int() => throw Exception('Invalid index'),
+                              },
+                              style: TextStyle(
+                                  fontSize: 30,
+                                  color: mainTheme,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.end,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Icon(item['icon'], color: mainTheme),
+                      const SizedBox(width: 20),
+                      Text(
+                        item['title'],
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                      const Spacer(),
+                      (isLoading && index == pressedIndex)
+                          ? const SizedBox(
+                              width: 28,
+                              height: 28,
+                              child: CircularProgressIndicator())
+                          : const Icon(Icons.chevron_right, color: Colors.grey),
+                    ],
+                  ),
                 ),
-                const Spacer(),
-                const Icon(Icons.chevron_right, color: Colors.grey),
-              ],
+              );
+            },
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            UserData.logOut();
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const LoginScreen()));
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.redAccent.withOpacity(0.8), // A visually distinct color
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
             ),
           ),
-        );
-      },
+          child: const Row(
+            mainAxisSize: MainAxisSize.min, // Button adjusts to content
+            children: [
+              Icon(Icons.logout, color: Colors.white),
+              SizedBox(width: 8),
+              Text(
+                '退出登陆',
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 100,)
+      ],
     );
   }
 }

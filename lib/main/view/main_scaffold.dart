@@ -7,7 +7,7 @@ import 'package:music_therapy/main/model/controller_provider.dart';
 import 'package:music_therapy/main/view/HomePage.dart';
 import 'package:music_therapy/main/view/MusicPlayPage.dart';
 import 'package:music_therapy/main/view/PersonalPage.dart';
-import 'package:music_therapy/main/view/RecommendSongListPage.dart';
+import 'package:music_therapy/main/view/RecommendPage.dart';
 import 'GeneratePage.dart';
 
 /*
@@ -53,7 +53,7 @@ class _ScaffoldPageState extends State<ScaffoldPage>
 
   final List<Widget> _pageList = [
     HomePage(),
-    const RecommendSongListPage(),
+    const RecommendPage(),
     const GeneratePage(),
     const PersonalPage()
   ];

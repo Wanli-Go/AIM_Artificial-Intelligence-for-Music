@@ -7,10 +7,11 @@ import 'package:music_therapy/main/model/Music.dart';
 class GenericMusicList extends StatefulWidget {
   final List<Music> list;
   final double heightPercentage;
+  final Widget? upperWidget;
   const GenericMusicList(
       {super.key,
       required this.list,
-      required this.heightPercentage,});
+      required this.heightPercentage, this.upperWidget,});
 
   @override
   State<GenericMusicList> createState() => _GenericMusicListState();
@@ -21,13 +22,24 @@ class _GenericMusicListState extends State<GenericMusicList> {
 
   late int clickedIndex;
 
+  // The playing music matches the index of the current playlist.
+  bool _isThisPlaylist(){
+    int globalIndex = GlobalMusic.index;
+    if(globalIndex < 0) return false;
+    return widget.list[globalIndex].musicId == GlobalMusic.music.musicId;
+  }
+
   @override
   void initState() {
     super.initState();
-    clickedIndex = GlobalMusic.index;
+    if(_isThisPlaylist()) {
+      clickedIndex = GlobalMusic.index;
+    } else {
+      clickedIndex = -1;
+    }
     // 监听音频播放器的时长变化
     audioPlayer.onDurationChanged.listen((dur) {
-      if (mounted) {
+      if (mounted && _isThisPlaylist()) {
         setState(() {
           clickedIndex = GlobalMusic.index;
         });
@@ -44,6 +56,7 @@ class _GenericMusicListState extends State<GenericMusicList> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if(widget.upperWidget != null)widget.upperWidget!,
           Expanded(
             child: ListView.separated(
               separatorBuilder: (context, index) => Divider(
@@ -67,7 +80,7 @@ class _GenericMusicListState extends State<GenericMusicList> {
                             color: mainTheme.withOpacity(0.6),
                             spreadRadius: 3,
                             blurRadius: 10,
-                            offset: Offset(0, 1), // changes position of shadow
+                            offset: const Offset(0, 1), // changes position of shadow
                           ),
                         ]
                       ),

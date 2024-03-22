@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:music_therapy/main/model/Music.dart'; // Make sure to import your Music model
 import 'package:music_therapy/app_theme.dart';
 
-class RecommendSongListPage extends StatefulWidget {
-  const RecommendSongListPage({Key? key}) : super(key: key);
+class RecommendPage extends StatefulWidget {
+  const RecommendPage({Key? key}) : super(key: key);
 
   @override
-  _RecommendSongListPageState createState() => _RecommendSongListPageState();
+  _RecommendPageState createState() => _RecommendPageState();
 }
 
-class _RecommendSongListPageState extends State<RecommendSongListPage> {
+class _RecommendPageState extends State<RecommendPage> {
   // Use the provided fakeMusicList
   final List<Music> fakeMusicList = Music.fakeMusicList;
 

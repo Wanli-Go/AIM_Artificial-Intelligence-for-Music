@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:music_therapy/main/model/User.dart';
+import 'package:music_therapy/main/model/user_data.dart';
 
 class LoginService {
   static const String ip = 'http://wasabi/';
@@ -20,6 +22,12 @@ class LoginService {
       );
 
       if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        User user = User.fromJson(jsonData);
+        UserData.username = user.userName;
+        UserData.userPhone = user.userAccount;
+        UserData.userIdentity = user.userIdentity;
+        UserData.userId = user.userId;
         return '1';
       } else {
         return 'Error: Status Code ${response.statusCode}';

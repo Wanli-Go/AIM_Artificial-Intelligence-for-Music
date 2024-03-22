@@ -45,7 +45,7 @@ class MusicDetailPage extends StatefulWidget {
 
 class _MusicDetailPageState extends State<MusicDetailPage>{
 
-  final RecentlyPlayedMusicService musicService=RecentlyPlayedMusicService();
+  final MusicService musicService=MusicService();
 
   late Music musicDetail;
 

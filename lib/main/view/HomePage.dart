@@ -19,8 +19,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late TabController _tabController;
 
-  final RecentlyPlayedMusicService homePageMusicService =
-      RecentlyPlayedMusicService();
+  final MusicService homePageMusicService =
+      MusicService();
 
   // Added variables to track loading state
   bool _isLoading = true;

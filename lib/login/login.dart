@@ -185,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     Navigator.pop(context);
                                     if (result == "1") {
                                       Navigator.of(context)
-                                          .push(MaterialPageRoute(
+                                          .pushReplacement(MaterialPageRoute(
                                         builder: (_) =>
                                             const ScaffoldPage(), // 将数据传递给下一个页面
                                       ));
