@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+
 // 定义一个最近播放页面的组件，继承自 StatefulWidget
-class GeneratePage extends StatefulWidget {
-  const GeneratePage({super.key});
+class DialogPage extends StatefulWidget {
+  const DialogPage({super.key});
 
   @override
-  _GeneratePageState createState() => _GeneratePageState();
+  _DialogPageState createState() => _DialogPageState();
 }
 
-class _GeneratePageState extends State<GeneratePage> {
-
-
+class _DialogPageState extends State<DialogPage> {
   List<Message> messages = [
     Message(
       sender: 'Alice',
@@ -33,7 +32,8 @@ class _GeneratePageState extends State<GeneratePage> {
     ),
     Message(
       sender: 'Alice',
-      text: 'I\'m writing a Flutter app for a client. It\'s a chat app with stories.',
+      text:
+          'I\'m writing a Flutter app for a client. It\'s a chat app with stories.',
       isCurrentUser: false,
     ),
     Message(
@@ -43,41 +43,11 @@ class _GeneratePageState extends State<GeneratePage> {
     ),
   ];
 
-  int index=1;
-
+  int index = 1;
 
   // 定义一个方法，用于构建页面的界面
   @override
   Widget build(BuildContext context) {
-
-    var bodies=[
-      Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            itemCount: messages.length,
-            itemBuilder: (context, index) {
-              return ChatBubble(
-                message: messages[index],
-              );
-            },
-          ),
-        ),
-        TextField(
-          decoration: InputDecoration(
-            hintText: 'Type a message',
-            border: const OutlineInputBorder(),
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.send),
-              onPressed: () {
-                // TODO: Implement sending messages
-              },
-            ),
-          ),
-        ),
-      ],
-    ),
-    ];
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -85,19 +55,40 @@ class _GeneratePageState extends State<GeneratePage> {
             icon: const Icon(Icons.swap_horiz),
             onPressed: () {
               index = (index + 1) % 2;
-              setState(() {
-              });
+              setState(() {});
             },
           ),
         ],
       ),
-      body: bodies[index]
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: messages.length,
+              itemBuilder: (context, index) {
+                return ChatBubble(
+                  message: messages[index],
+                );
+              },
+            ),
+          ),
+          TextField(
+            decoration: InputDecoration(
+              hintText: 'Type a message',
+              border: const OutlineInputBorder(),
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.send),
+                onPressed: () {
+                  // TODO: Implement sending messages
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
-
-
-
 
 // A class to represent a message
 class Message {
@@ -122,7 +113,7 @@ class ChatBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     // Determine the alignment and color of the chat bubble
     Alignment alignment =
-    message.isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
+        message.isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
     Color color = message.isCurrentUser ? Colors.blue : Colors.grey[300]!;
 
     return Align(
@@ -146,7 +137,8 @@ class ChatBubble extends StatelessWidget {
                   Text(
                     message.text,
                     style: TextStyle(
-                      color: message.isCurrentUser ? Colors.white : Colors.black,
+                      color:
+                          message.isCurrentUser ? Colors.white : Colors.black,
                     ),
                   ),
               ],
@@ -157,4 +149,3 @@ class ChatBubble extends StatelessWidget {
     );
   }
 }
-

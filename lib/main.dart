@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:music_therapy/login/login.dart';
 import 'package:music_therapy/app_theme.dart';
 import 'package:music_therapy/main/model/controller_provider.dart';
-import 'package:music_therapy/main/view/FavoriteMusicListPage.dart';
-import 'package:music_therapy/main/view/SongListPage.dart';
-
 /*
 Entry to application.
 
@@ -38,10 +35,6 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin{
         fontFamily: "StarRail",
         useMaterial3: true,
       ),
-        routes: {
-          '/songList': (context) => const SongListPage(),
-          '/favoriteMusic': (context) => const FavoriteMusicListPage(),
-        },
       home: const LoginScreen(
         existingName: "12312341234",
         existingPassword: "A123der123foo",

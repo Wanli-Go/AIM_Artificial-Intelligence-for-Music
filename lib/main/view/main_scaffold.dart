@@ -4,6 +4,7 @@ import 'package:motion_tab_bar/MotionTabBarController.dart';
 import 'package:music_therapy/main/component/Disc.dart';
 import 'package:music_therapy/app_theme.dart';
 import 'package:music_therapy/main/model/controller_provider.dart';
+import 'package:music_therapy/main/view/DialogPage.dart';
 import 'package:music_therapy/main/view/HomePage.dart';
 import 'package:music_therapy/main/view/MusicPlayPage.dart';
 import 'package:music_therapy/main/view/PersonalPage.dart';
@@ -57,19 +58,18 @@ class _ScaffoldPageState extends State<ScaffoldPage>
     const GeneratePage(),
     const PersonalPage()
   ];
-  late int currentIndex = 0;
+
+  int currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor: Colors.white,
-
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: appBarTheme,
         title: Row(
-          children: 
-          [
+          children: [
             const Icon(Icons.headset_outlined),
             const SizedBox(
               width: 15,
@@ -80,11 +80,13 @@ class _ScaffoldPageState extends State<ScaffoldPage>
             ),
           ],
         ),
-
         actions: [
           GestureDetector(
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const MusicPlayPage()));
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const MusicPlayPage()));
             },
             child: Row(
               children: [
@@ -103,17 +105,13 @@ class _ScaffoldPageState extends State<ScaffoldPage>
           )
         ],
         iconTheme: IconThemeData(color: mainTheme),
-
       ),
-
       body: TabBarView(
           physics:
               const NeverScrollableScrollPhysics(), // swipe navigation handling is not supported
           controller: _motionTabBarController,
           children: _pageList),
-
       drawer: null,
-
       bottomNavigationBar: MotionTabBar(
         controller:
             _motionTabBarController, // Add this controller if you need to change your tab programmatically
@@ -143,10 +141,46 @@ class _ScaffoldPageState extends State<ScaffoldPage>
         tabBarColor: Colors.white,
         onTabItemSelected: (int value) {
           setState(() {
+            currentIndex = value;
             _motionTabBarController!.index = value;
           });
         },
       ),
+      floatingActionButton: (currentIndex == 1 || currentIndex == 2)
+          ? FloatingActionButton(
+              backgroundColor: Colors.grey[50],
+              foregroundColor: Colors.black87,
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Icon(
+                    Icons.comment_bank_rounded,
+                    size: 30,
+                  ),
+                  Text(
+                    "疗愈助手",
+                    style: TextStyle(fontSize: 9.5),
+                  ),
+                  SizedBox()
+                ],
+              ),
+              onPressed: () => {
+                    showDialog(
+                      context: context,
+                      builder: _dialogBuilder,
+                    )
+                  })
+          : null,
+    );
+  }
+
+  Widget _dialogBuilder(BuildContext context) {
+    return AlertDialog(
+      title: Text('与音乐疗愈助手对话\n获得你想要的音乐 🎵',style: TextStyle(fontSize: 15, color: mainTheme), textAlign: TextAlign.center,),
+      content: DialogPage(),
+      shadowColor: mainTheme,
+      surfaceTintColor: Colors.white,
+      actions: null
     );
   }
 }
