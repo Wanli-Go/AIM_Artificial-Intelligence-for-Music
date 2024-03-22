@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:music_therapy/app_theme.dart';
 
 // 定义一个最近播放页面的组件，继承自 StatefulWidget
 class DialogPage extends StatefulWidget {
@@ -8,38 +10,30 @@ class DialogPage extends StatefulWidget {
   _DialogPageState createState() => _DialogPageState();
 }
 
+// A class to represent a message
+class _Message {
+  final String sender;
+  final String text;
+  final bool isCurrentUser;
+
+  _Message({
+    required this.sender,
+    this.text = '',
+    required this.isCurrentUser,
+  });
+}
+
 class _DialogPageState extends State<DialogPage> {
-  List<Message> messages = [
-    Message(
-      sender: 'Alice',
-      text: 'Hi, Bob. How are you?',
+  List<_Message> messages = [
+    _Message(
+      sender: 'Assistant',
+      text: '您好！\n我是音乐疗愈助手，我会引导您通过音乐治疗自己。',
       isCurrentUser: false,
     ),
-    Message(
-      sender: 'Bob',
-      text: 'I\'m good, thanks. How about you?',
-      isCurrentUser: true,
-    ),
-    Message(
-      sender: 'Alice',
-      text: 'I\'m fine too. Just a bit busy with work.',
+    _Message(
+      sender: 'Assistant',
+      text: '请问您现在的心情用以下哪一点描述比较合适？\n 1. 欢快 \n 2. 平静 \n 3. 悲郁 \n 4. 其它，请言明',
       isCurrentUser: false,
-    ),
-    Message(
-      sender: 'Bob',
-      text: 'I see. What are you working on?',
-      isCurrentUser: true,
-    ),
-    Message(
-      sender: 'Alice',
-      text:
-          'I\'m writing a Flutter app for a client. It\'s a chat app with stories.',
-      isCurrentUser: false,
-    ),
-    Message(
-      sender: 'Bob',
-      text: 'Wow, that sounds cool. Can you show me some screenshots?',
-      isCurrentUser: true,
     ),
   ];
 
@@ -74,8 +68,10 @@ class _DialogPageState extends State<DialogPage> {
           ),
           TextField(
             decoration: InputDecoration(
-              hintText: 'Type a message',
-              border: const OutlineInputBorder(),
+              hintText: '输入...',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
               suffixIcon: IconButton(
                 icon: const Icon(Icons.send),
                 onPressed: () {
@@ -90,22 +86,9 @@ class _DialogPageState extends State<DialogPage> {
   }
 }
 
-// A class to represent a message
-class Message {
-  final String sender;
-  final String text;
-  final bool isCurrentUser;
-
-  Message({
-    required this.sender,
-    this.text = '',
-    required this.isCurrentUser,
-  });
-}
-
 // A widget to display a chat bubble
 class ChatBubble extends StatelessWidget {
-  final Message message;
+  final _Message message;
 
   const ChatBubble({Key? key, required this.message}) : super(key: key);
 
@@ -114,7 +97,7 @@ class ChatBubble extends StatelessWidget {
     // Determine the alignment and color of the chat bubble
     Alignment alignment =
         message.isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
-    Color color = message.isCurrentUser ? Colors.blue : Colors.grey[300]!;
+    Color color = message.isCurrentUser ? Colors.grey[200]! : mainTheme.withOpacity(0.7);
 
     return Align(
       alignment: alignment,
@@ -138,7 +121,12 @@ class ChatBubble extends StatelessWidget {
                     message.text,
                     style: TextStyle(
                       color:
-                          message.isCurrentUser ? Colors.white : Colors.black,
+                          message.isCurrentUser ? Colors.black : Colors.white,
+                          shadows: [Shadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 5,
+                            offset: Offset(0, 2),
+                          )]
                     ),
                   ),
               ],
