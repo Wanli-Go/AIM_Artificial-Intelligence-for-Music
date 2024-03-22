@@ -119,7 +119,7 @@ class _ScaffoldPageState extends State<ScaffoldPage>
             _motionTabBarController, // Add this controller if you need to change your tab programmatically
         initialSelectedTab: "首页",
         useSafeArea: true, // default: true, apply safe area wrapper
-        labels: const ["首页", "推荐", "生成", "设置"],
+        labels: const ["首页", "疗愈·推荐", "疗愈·生成", "设置"],
         icons: const [
           Icons.home_filled,
           Icons.queue_music_rounded,

@@ -20,21 +20,21 @@ class MusicPlayPage extends StatefulWidget {
 }
 
 class _MusicPlayPageState extends State<MusicPlayPage> {
-  Music music = GlobalMusic.music;
-  AudioPlayer audioPlayer = GlobalMusic.globalAudioPlayer;
+  late Music music;
+  late AudioPlayer audioPlayer;
   // 创建一个音频播放状态变量
-  PlayerState playerState = GlobalMusic.globalPlayerState;
+  late PlayerState playerState;
   // 创建一个音频播放进度变量
-  Duration position = GlobalMusic.globalPosition;
+  late Duration position;
   // 创建一个音频总时长变量
-  Duration duration = GlobalMusic.globalDuration;
+  late Duration duration;
 
   PaletteGenerator? paletteGenerator;
 
   Future<void> _updatePaletteGenerator() async {
     paletteGenerator = await PaletteGenerator.fromImageProvider(
       NetworkImage(music.image),
-      maximumColorCount: 2,
+      maximumColorCount: 5,
     );
     setState(() {});
   }
@@ -42,6 +42,12 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
   @override
   void initState() {
     super.initState();
+    music = GlobalMusic.music;
+    audioPlayer = GlobalMusic.globalAudioPlayer;
+    playerState = GlobalMusic.globalPlayerState;
+    position = GlobalMusic.globalPosition;
+    duration = GlobalMusic.globalDuration;
+
     // 监听音频播放器的状态变化
     audioPlayer.onPlayerStateChanged.listen((state) {
       if (mounted) {
@@ -53,7 +59,6 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
     });
     // 监听音频播放器的进度变化
     audioPlayer.onPositionChanged.listen((pos) {
-      // FIXME: alternate to duration changed
       if (mounted) {
         setState(() {
           position = pos;
@@ -78,9 +83,11 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
     // 如果音频已经在播放，就暂停
     if (playerState == PlayerState.playing) {
       await audioPlayer.pause();
+      GlobalMusic.globalPlayerState = PlayerState.paused;
       stopsAnimation();
     } else {
       await audioPlayer.play(GlobalMusic.globalSource);
+      GlobalMusic.globalPlayerState = PlayerState.playing;
       startAnimation();
     }
   }
@@ -118,8 +125,7 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
             colors: (paletteGenerator != null)
                 ? [
                     paletteGenerator!.dominantColor?.color ?? appBarTheme,
-                    paletteGenerator!.lightVibrantColor?.color ??
-                        mainTheme.withOpacity(0.3)
+                    paletteGenerator!.vibrantColor?.color ?? (paletteGenerator!.lightMutedColor?.color ?? mainTheme.withOpacity(0.3)) 
                   ]
                 : [appBarTheme, mainTheme.withOpacity(0.3)],
           ),
@@ -138,7 +144,7 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
                           .withOpacity(0.5), // Adjust opacity as needed
                       blurRadius: 15.0,
                       spreadRadius: 8.0,
-                      offset: Offset(0, 1), // Offset for shadow direction
+                      offset: const Offset(0, 1), // Offset for shadow direction
                     ),
                   ],
                 ),
@@ -161,6 +167,7 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
             // 显示歌曲时长
@@ -212,16 +219,23 @@ class _MusicPlayPageState extends State<MusicPlayPage> {
             ),
             const SizedBox(height: 32),
             // 显示歌曲播放按钮
-            FloatingActionButton(
-              onPressed: play,
-              backgroundColor: Colors.white,
-              child: Icon(
-                playerState == PlayerState.playing
-                    ? Icons.pause
-                    : Icons.play_arrow,
-                color: mainTheme,
-                size: 32,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(onPressed: () => GlobalMusic.previousSong(), icon: const Icon(Icons.skip_previous_rounded, size: 30,)),
+                FloatingActionButton(
+                  onPressed: play,
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    playerState == PlayerState.playing
+                        ? Icons.pause
+                        : Icons.play_arrow,
+                    color: mainTheme,
+                    size: 32,
+                  ),
+                ),
+                IconButton(onPressed: () => GlobalMusic.nextSong(), icon: const Icon(Icons.skip_next_rounded, size: 30,)),
+              ],
             ),
             const SizedBox(height: 32),
           ],

@@ -200,9 +200,11 @@ class _BottomMusicBarState extends State<BottomMusicBar> {
     // 如果音频已经在播放，就暂停
     if (playerState == PlayerState.playing) {
       await audioPlayer.pause();
+      GlobalMusic.globalPlayerState = PlayerState.paused;
       stopsAnimation();
     } else {
       await audioPlayer.play(GlobalMusic.globalSource);
+      GlobalMusic.globalPlayerState = PlayerState.playing;
       startAnimation();
     }
   }
