@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:music_therapy/app_theme.dart';
+import 'package:music_therapy/main/model/message.dart';
+import 'package:music_therapy/main/model/user_data.dart';
+import 'package:music_therapy/main/service/chat_service.dart';
 
 // 定义一个最近播放页面的组件，继承自 StatefulWidget
 class DialogPage extends StatefulWidget {
@@ -10,74 +13,135 @@ class DialogPage extends StatefulWidget {
   _DialogPageState createState() => _DialogPageState();
 }
 
-// A class to represent a message
-class _Message {
-  final String sender;
-  final String text;
-  final bool isCurrentUser;
 
-  _Message({
-    required this.sender,
-    this.text = '',
-    required this.isCurrentUser,
-  });
-}
 
 class _DialogPageState extends State<DialogPage> {
-  List<_Message> messages = [
-    _Message(
+  final TextEditingController _textController = TextEditingController();
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  final ScrollController _scrollController = ScrollController();
+  final FocusNode _focusNode = FocusNode();
+
+  List<Message> messages = [Message(
       sender: 'Assistant',
       text: '您好！\n我是音乐疗愈助手，我会引导您通过音乐治疗自己。',
       isCurrentUser: false,
-    ),
-    _Message(
+    )];
+
+  int index = 1;
+
+  bool _isFirstMessage = true;
+
+  void _sendMessage(Message message) async {
+    setState(() {
+      messages.add(message);
+      _listKey.currentState!.insertItem(messages.length - 1);
+      _textController.clear();
+    });
+    await Future.delayed(Duration(milliseconds: 100));
+    _scrollDown();
+  }
+
+  void _scrollDown() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+  }
+
+  void awaitServerResponse(String text) async {
+    Message response = await ChatService.sendMessage(UserData.userId, text, _isFirstMessage);
+    _sendMessage(response);
+    await Future.delayed(Duration(milliseconds: 100));
+    _scrollDown();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initializeMessages();
+    _focusNode.addListener(() async {
+      if (_focusNode.hasFocus) {
+        await Future.delayed(Duration(milliseconds: 600));
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  void initializeMessages() async {
+    await Future.delayed(Duration(milliseconds: 700));
+    Message _messageStarter = Message(
       sender: 'Assistant',
       text: '请问您现在的心情用以下哪一点描述比较合适？\n 1. 欢快 \n 2. 平静 \n 3. 悲郁 \n 4. 其它，请言明',
       isCurrentUser: false,
-    ),
-  ];
-
-  int index = 1;
+    );
+    _sendMessage(_messageStarter);
+  }
 
   // 定义一个方法，用于构建页面的界面
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.swap_horiz),
-            onPressed: () {
-              index = (index + 1) % 2;
-              setState(() {});
-            },
-          ),
-        ],
-      ),
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                return ChatBubble(
-                  message: messages[index],
+            child: AnimatedList(
+              key: _listKey,
+              controller: _scrollController,
+              initialItemCount: messages.length,
+              itemBuilder: (context, index, animation) {
+                return SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0, 0.3),
+                    end: Offset.zero,
+                  ).animate(animation),
+                  child: FadeTransition(
+                    opacity: Tween<double>(
+                      begin: 0,
+                      end: 1,
+                    ).animate(animation),
+                    child: ChatBubble(
+                      message: messages[index],
+                    ),
+                  ),
                 );
               },
             ),
           ),
           TextField(
+            focusNode: _focusNode,
+            controller: _textController,
+            enabled: !messages.last
+                .isCurrentUser, // If the user is completing the input, await the server's response.
             decoration: InputDecoration(
               hintText: '输入...',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.send),
-                onPressed: () {
-                  // TODO: Implement sending messages
-                },
-              ),
+              suffixIcon: messages.last.isCurrentUser
+                  ? const Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: CircularProgressIndicator(strokeWidth: 5,),
+                  )
+                  : IconButton(
+                      icon: const Icon(Icons.send_rounded),
+                      onPressed: () {
+                        if (_textController.text.isNotEmpty) {
+                          final message = Message(
+                            sender: 'You', // Or get the user's name
+                            text: _textController.text,
+                            isCurrentUser: true,
+                          );
+                          _sendMessage(message);
+                          _textController.clear();
+                          awaitServerResponse(_textController.text);
+                        }
+                      },
+                    ),
             ),
           ),
         ],
@@ -88,7 +152,7 @@ class _DialogPageState extends State<DialogPage> {
 
 // A widget to display a chat bubble
 class ChatBubble extends StatelessWidget {
-  final _Message message;
+  final Message message;
 
   const ChatBubble({Key? key, required this.message}) : super(key: key);
 
@@ -97,7 +161,8 @@ class ChatBubble extends StatelessWidget {
     // Determine the alignment and color of the chat bubble
     Alignment alignment =
         message.isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
-    Color color = message.isCurrentUser ? Colors.grey[200]! : mainTheme.withOpacity(0.7);
+    Color color =
+        message.isCurrentUser ? Colors.grey[200]! : mainTheme.withOpacity(0.7);
 
     return Align(
       alignment: alignment,
@@ -113,21 +178,21 @@ class ChatBubble extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Show the sender name if the message is not from the current user
-
-                // Show the message text if any
                 if (message.text.isNotEmpty)
                   Text(
                     message.text,
                     style: TextStyle(
-                      color:
-                          message.isCurrentUser ? Colors.black : Colors.white,
-                          shadows: [Shadow(
-                            color: Colors.black.withOpacity(0.3),
+                        color:
+                            message.isCurrentUser ? Colors.black : Colors.white,
+                        shadows: [
+                          Shadow(
+                            color: message.isCurrentUser
+                                ? Colors.white
+                                : Colors.black.withOpacity(0.3),
                             blurRadius: 5,
                             offset: Offset(0, 2),
-                          )]
-                    ),
+                          )
+                        ]),
                   ),
               ],
             ),

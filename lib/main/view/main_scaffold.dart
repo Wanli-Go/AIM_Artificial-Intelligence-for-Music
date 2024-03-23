@@ -176,11 +176,16 @@ class _ScaffoldPageState extends State<ScaffoldPage>
 
   Widget _dialogBuilder(BuildContext context) {
     return AlertDialog(
-      title: Text('与疗愈助手对话\n获取你想要的音乐。🎵',style: TextStyle(fontSize: 15, color: Colors.black54), textAlign: TextAlign.center,),
-      content: DialogPage(),
-      shadowColor: mainTheme,
-      surfaceTintColor: Colors.white,
-      actions: null
-    );
+        title: const Text(
+          '与疗愈助手对话\n获取你想要的音乐。🎵',
+          style: TextStyle(fontSize: 15, color: Colors.black54),
+          textAlign: TextAlign.center,
+        ),
+        content: const DialogPage(),
+        shadowColor: mainTheme,
+        surfaceTintColor: Colors.white,
+        insetPadding: const EdgeInsets.only(bottom: 15),
+        contentPadding: const EdgeInsets.all(10),
+        actions: null);
   }
 }
