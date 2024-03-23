@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:music_therapy/app_theme.dart';
 import 'package:music_therapy/login/login.dart';
@@ -121,7 +120,7 @@ class _PersonalPageState extends State<PersonalPage> {
                     )]
                   ),
                   width: 55,
-                  child: Row(
+                  child: const Row(
                     children: [
                       Icon(Icons.diamond_outlined,),
                       SizedBox(width: 3,),
@@ -253,7 +252,7 @@ class _PersonalPageState extends State<PersonalPage> {
             ],
           ),
         ),
-        SizedBox(height: 100,)
+        const SizedBox(height: 100,)
       ],
     );
   }

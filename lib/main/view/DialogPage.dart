@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:music_therapy/app_theme.dart';
+import 'package:music_therapy/main/model/dialog_provider.dart';
 import 'package:music_therapy/main/model/message.dart';
 import 'package:music_therapy/main/model/user_data.dart';
 import 'package:music_therapy/main/service/chat_service.dart';
+import 'package:provider/provider.dart';
 
 // 定义一个最近播放页面的组件，继承自 StatefulWidget
 class DialogPage extends StatefulWidget {
@@ -13,23 +15,21 @@ class DialogPage extends StatefulWidget {
   _DialogPageState createState() => _DialogPageState();
 }
 
-
-
 class _DialogPageState extends State<DialogPage> {
   final TextEditingController _textController = TextEditingController();
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final ScrollController _scrollController = ScrollController();
   final FocusNode _focusNode = FocusNode();
 
-  List<Message> messages = [Message(
+  List<Message> messages = [
+    Message(
       sender: 'Assistant',
       text: '您好！\n我是音乐疗愈助手，我会引导您通过音乐治疗自己。',
       isCurrentUser: false,
-    )];
+    )
+  ];
 
-  int index = 1;
-
-  bool _isFirstMessage = true;
+  final bool _isFirstMessage = true;
 
   void _sendMessage(Message message) async {
     setState(() {
@@ -37,22 +37,23 @@ class _DialogPageState extends State<DialogPage> {
       _listKey.currentState!.insertItem(messages.length - 1);
       _textController.clear();
     });
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
     _scrollDown();
   }
 
   void _scrollDown() {
     _scrollController.animateTo(
       _scrollController.position.maxScrollExtent,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
     );
   }
 
   void awaitServerResponse(String text) async {
-    Message response = await ChatService.sendMessage(UserData.userId, text, _isFirstMessage);
+    Message response =
+        await ChatService.sendMessage(UserData.userId, text, _isFirstMessage);
     _sendMessage(response);
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
     _scrollDown();
   }
 
@@ -62,10 +63,10 @@ class _DialogPageState extends State<DialogPage> {
     initializeMessages();
     _focusNode.addListener(() async {
       if (_focusNode.hasFocus) {
-        await Future.delayed(Duration(milliseconds: 600));
+        await Future.delayed(const Duration(milliseconds: 600));
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
       }
@@ -73,13 +74,13 @@ class _DialogPageState extends State<DialogPage> {
   }
 
   void initializeMessages() async {
-    await Future.delayed(Duration(milliseconds: 700));
-    Message _messageStarter = Message(
+    await Future.delayed(const Duration(milliseconds: 700));
+    Message messageStarter = Message(
       sender: 'Assistant',
       text: '请问您现在的心情用以下哪一点描述比较合适？\n 1. 欢快 \n 2. 平静 \n 3. 悲郁 \n 4. 其它，请言明',
       isCurrentUser: false,
     );
-    _sendMessage(_messageStarter);
+    _sendMessage(messageStarter);
   }
 
   // 定义一个方法，用于构建页面的界面
@@ -106,6 +107,7 @@ class _DialogPageState extends State<DialogPage> {
                     ).animate(animation),
                     child: ChatBubble(
                       message: messages[index],
+                      isValid: index % 2 == 1 && index >= 5,
                     ),
                   ),
                 );
@@ -124,9 +126,11 @@ class _DialogPageState extends State<DialogPage> {
               ),
               suffixIcon: messages.last.isCurrentUser
                   ? const Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: CircularProgressIndicator(strokeWidth: 5,),
-                  )
+                      padding: EdgeInsets.all(10.0),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 5,
+                      ),
+                    )
                   : IconButton(
                       icon: const Icon(Icons.send_rounded),
                       onPressed: () {
@@ -153,8 +157,10 @@ class _DialogPageState extends State<DialogPage> {
 // A widget to display a chat bubble
 class ChatBubble extends StatelessWidget {
   final Message message;
+  final bool isValid;
 
-  const ChatBubble({Key? key, required this.message}) : super(key: key);
+  const ChatBubble({Key? key, required this.message, this.isValid = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -190,15 +196,63 @@ class ChatBubble extends StatelessWidget {
                                 ? Colors.white
                                 : Colors.black.withOpacity(0.3),
                             blurRadius: 5,
-                            offset: Offset(0, 2),
+                            offset: const Offset(0, 2),
                           )
                         ]),
                   ),
+                if (isValid)
+                  Column(
+                    children: [
+                      const Divider(),
+                      Text(
+                        "—— 根据这一段描述生成/推荐 ——",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            shadows: [
+                              Shadow(
+                                color: message.isCurrentUser
+                                    ? Colors.white
+                                    : Colors.black.withOpacity(0.3),
+                                blurRadius: 2,
+                              )
+                            ]),
+                      ),
+                      Consumer<DialogProvider>(
+                        builder: (context, provider, child) => Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                                onPressed: () {
+                                  _buttonClicked(context, provider, 1);
+                                },
+                                child: const Text("推荐",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    ))),
+                            ElevatedButton(
+                                onPressed: (){
+                                  _buttonClicked(context, provider, 2);
+                                },
+                                child: const Text("生成",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    ))),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  void _buttonClicked(BuildContext c, DialogProvider p, int submit) async {
+    Navigator.of(c).pop();
+    p.submit(submit);
   }
 }

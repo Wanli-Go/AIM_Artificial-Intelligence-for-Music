@@ -8,7 +8,8 @@ import 'package:music_therapy/main/model/Music.dart';
 import '../model/GlobalMusic.dart';
 
 class GeneratePage extends StatefulWidget {
-  const GeneratePage({Key? key}) : super(key: key);
+  final bool reloaded;
+  const GeneratePage({Key? key, this.reloaded=false}) : super(key: key);
 
   @override
   _GeneratePageState createState() => _GeneratePageState();

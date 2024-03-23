@@ -1,5 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
-import 'package:music_therapy/main/model/controller_provider.dart';
+import 'package:music_therapy/main/model/global_controller.dart';
 
 import 'Music.dart';
 

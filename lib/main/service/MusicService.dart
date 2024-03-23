@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:music_therapy/main/model/user_data.dart';
 
 import '../model/Music.dart';
 
@@ -256,5 +257,10 @@ class MusicService {
     // 使用map函数，将data数组中的每个元素，使用MusicSheet.fromJson方法，转换为一个MusicSheet对象
     // 使用toList函数，将结果转换为一个List<MusicSheet>
     return data.map((e) => Music.fromJson(e)).toList();
+  }
+
+  Future<List<Music>> getRecommendedMusicList() async {
+    // TODO: Implement
+    return await getGenerated(UserData.userId, 1, 7);
   }
 }

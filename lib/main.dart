@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:music_therapy/login/login.dart';
 import 'package:music_therapy/app_theme.dart';
-import 'package:music_therapy/main/model/controller_provider.dart';
+import 'package:music_therapy/main/model/dialog_provider.dart';
+import 'package:music_therapy/main/model/global_controller.dart';
+import 'package:provider/provider.dart';
 /*
 Entry to application.
 
@@ -28,18 +30,21 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin{
     
     initializeController(this);
 
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: mainTheme),
-        fontFamily: "StarRail",
-        useMaterial3: true,
+    return ChangeNotifierProvider(
+      create: (context) => DialogProvider(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: mainTheme),
+          fontFamily: "StarRail",
+          useMaterial3: true,
+        ),
+        home: const LoginScreen(
+          existingName: "12312341234",
+          existingPassword: "A123der123foo",
+        )
+        // TODO: remove existing name and password
       ),
-      home: const LoginScreen(
-        existingName: "12312341234",
-        existingPassword: "A123der123foo",
-      )
-      // TODO: remove existing name and password
     );
   }
 }

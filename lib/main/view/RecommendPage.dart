@@ -1,24 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:music_therapy/main/model/Music.dart'; // Make sure to import your Music model
 import 'package:music_therapy/app_theme.dart';
+import 'package:music_therapy/main/service/MusicService.dart';
 
 class RecommendPage extends StatefulWidget {
-  const RecommendPage({Key? key}) : super(key: key);
+  bool reloaded;
+  final List<Music> musicList = [];
+  RecommendPage({Key? key, this.reloaded = true}) : super(key: key);
 
   @override
   _RecommendPageState createState() => _RecommendPageState();
 }
 
 class _RecommendPageState extends State<RecommendPage> {
-  // Use the provided fakeMusicList
-  final List<Music> fakeMusicList = Music.fakeMusicList;
-
+  final MusicService _service = MusicService();
   int _selectedIndex = 0;
+  bool isLoading = true;
   final PageController _pageController = PageController(viewportFraction: 0.8);
+
+  void _requestMusicList() async {
+    if(widget.musicList.isEmpty || widget.reloaded) {
+      await _service.getRecommendedMusicList().then((value) {
+      setState(() {
+        widget.musicList.addAll(value);
+        isLoading = false;
+      });
+    });
+    }
+    setState(() {
+      isLoading = false;
+      widget.reloaded = false;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    if(isLoading)_requestMusicList();
     _pageController.addListener(() {
       // 获取当前的滚动位置
       double position = _pageController.position.pixels;
@@ -47,7 +65,11 @@ class _RecommendPageState extends State<RecommendPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return isLoading 
+    ? const Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [CircularProgressIndicator(), SizedBox(height: 10), Text("请求推荐音乐中...")],)
+    : Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const SizedBox(
@@ -86,7 +108,7 @@ class _RecommendPageState extends State<RecommendPage> {
                     .end, // Align the text and progress bars to the start
                 children: [
                   Text(
-                    fakeMusicList[_selectedIndex].name,
+                    widget.musicList[_selectedIndex].name,
                     style: const TextStyle(
                         fontSize: 19,
                         color: Color.fromARGB(255, 129, 70, 52),
@@ -95,9 +117,9 @@ class _RecommendPageState extends State<RecommendPage> {
                   ),
                   const SizedBox(height: 20), // Add some spacing
                   // Display tags for the selected song
-                  if (fakeMusicList[_selectedIndex].tags !=
+                  if (widget.musicList[_selectedIndex].tags !=
                       null) // Check if tags are not null
-                    ...fakeMusicList[_selectedIndex]
+                    ...widget.musicList[_selectedIndex]
                         .tags!
                         .entries
                         .map((entry) => Padding(
@@ -139,7 +161,7 @@ class _RecommendPageState extends State<RecommendPage> {
                 top: MediaQuery.of(context).size.height * 0.5 - 150,
                 bottom: MediaQuery.of(context).size.height * 0.5 - 150),
             scrollDirection: Axis.vertical,
-            itemCount: fakeMusicList.length,
+            itemCount: widget.musicList.length,
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.all(10),
@@ -153,7 +175,7 @@ class _RecommendPageState extends State<RecommendPage> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: Image.network(
-                      fakeMusicList[index].image,
+                      widget.musicList[index].image,
                       width: 150,
                       height: 135,
                       fit: BoxFit.cover,
