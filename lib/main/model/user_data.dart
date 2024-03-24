@@ -5,6 +5,7 @@ class UserData{
   static String userIll = "/";
   static String userImage = "https://picsum.photos/id/104/200/200";
   static String userId = "";
+  static String tokens = "";
 
   static void logOut(){
     username = "";
@@ -13,5 +14,6 @@ class UserData{
     userIll = "";
     userImage = "";
     userId = "";
+    tokens = "";
   }
 }

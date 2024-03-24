@@ -232,6 +232,7 @@ class ChatBubble extends StatelessWidget {
                                     ))),
                             ElevatedButton(
                                 onPressed: (){
+                                  UserData.tokens = message.text;
                                   _buttonClicked(context, provider, 2);
                                 },
                                 child: const Text("生成",

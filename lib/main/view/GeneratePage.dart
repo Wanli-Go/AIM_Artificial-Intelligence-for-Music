@@ -57,50 +57,6 @@ class _GeneratePageState extends State<GeneratePage> {
     });
   }
 
-// 定义一个方法，用于显示评分对话框
-  void _showRatingDialog() {
-    // 调用 showDialog 方法，传入一个 AlertDialog 组件
-    showDialog(
-      context: context,
-      barrierDismissible: true, // 设置点击外部是否关闭对话框
-      builder: (context) {
-        return AlertDialog(
-          // 设置对话框的标题
-          title: const Text('评价生成结果'),
-          // 设置对话框的内容为一个评分的组件，传入一个回调函数
-          content: RatingWidget(
-            onRatingChanged: (value) {
-              Navigator.of(context).pop();
-            },
-          ),
-          // 设置对话框的操作按钮
-          actions: [
-            // 添加一个文本按钮，用于关闭对话框
-            TextButton(
-              child: const Text('关闭'),
-              onPressed: () {
-                // 关闭对话框
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  // 定义一个播放音频的方法
-  Future<void> play() async {
-    // 如果音频已经在播放，就暂停
-    if (playerState == PlayerState.playing) {
-      await audioPlayer.pause();
-      _showRatingDialog();
-    } else {
-      // 否则就播放
-      await audioPlayer.play(source);
-    }
-  }
-
   // 定义一个格式化时间的方法
   String formatDuration(Duration d) {
     // 将秒数转换为分:秒的形式
@@ -214,67 +170,6 @@ class _GeneratePageState extends State<GeneratePage> {
                   ],
                 ),
 
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Text(
-                              "生成一段音乐需要对应的",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              "提示词",
-                              style: TextStyle(
-                                color: Colors.yellow.shade700,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Text(
-                              "你也可以点击",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              "获取提示词",
-                              style: TextStyle(
-                                color: Colors.deepOrange.shade400,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const Text(
-                              "，与疗愈助手对话获取提示词",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
                 const SizedBox(
                   height: 3,
                 ),
@@ -285,26 +180,6 @@ class _GeneratePageState extends State<GeneratePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   // 设置垂直布局的子组件列表
                   children: [
-                    ElevatedButton(
-                      // 设置按钮的文本为获取提示词
-                      child: Text(
-                        '获取提示词',
-                        style: TextStyle(
-                          color: Colors.deepOrange.shade400,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      // 设置按钮的点击事件为调用获取提示词的方法
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) =>
-                              const GeneratePage(), // 将数据传递给下一个页面，使用_musicSheetList中的元素
-                        ));
-                      },
-                    ),
-                    const SizedBox(width: 50),
-                    // 添加一个按钮组件，用于提交表单
                     ElevatedButton(
                       // 设置按钮的文本为提交
                       onPressed: _submit,
@@ -366,7 +241,7 @@ class _GeneratePageState extends State<GeneratePage> {
                       ? Icons.pause
                       : Icons.play_arrow),
                   iconSize: 40,
-                  onPressed: play,
+                  onPressed: (){},
                 ),
                 // 显示歌曲播放进度和总时长
                 Text(
@@ -378,67 +253,6 @@ class _GeneratePageState extends State<GeneratePage> {
           ),
         ),
       ),
-    );
-  }
-}
-
-// 定义一个评分的组件，继承自 StatefulWidget
-class RatingWidget extends StatefulWidget {
-
-  final Function(int) onRatingChanged;
-
-  const RatingWidget({super.key, required this.onRatingChanged});
-
-  @override
-  RatingWidgetState createState() => RatingWidgetState();
-}
-
-
-class RatingWidgetState extends State<RatingWidget> {
-
-  int rating = 0;
-
-  List<Icon> stars = [
-    const Icon(Icons.star_border),
-    const Icon(Icons.star_border),
-    const Icon(Icons.star_border),
-    const Icon(Icons.star_border),
-    const Icon(Icons.star_border),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-
-      mainAxisAlignment: MainAxisAlignment.center,
-
-      children: List.generate(5, (index) {
-
-        return GestureDetector(
-
-          child: stars[index],
-
-          onTap: () {
-
-            setState(() {
-
-              rating = index + 1;
-
-              for (int i = 0; i < 5; i++) {
-                if (i < rating) {
-
-                  stars[i] = const Icon(Icons.star, color: Colors.yellow);
-                } else {
-
-                  stars[i] = const Icon(Icons.star_border);
-                }
-              }
-
-              widget.onRatingChanged(rating);
-            });
-          },
-        );
-      }),
     );
   }
 }
