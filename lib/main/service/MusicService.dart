@@ -119,6 +119,7 @@ class MusicService {
       if (response.statusCode == 200) {
         // 解析响应的数据，根据你的后端返回的格式进行处理
         var data = jsonDecode(utf8.decode(response.bodyBytes));
+        print(data);
         // 调用extractMusicSheetList函数，传入json对象，得到一个List<MusicSheet>
         Music music = extractMusic(data);
         // 返回这个List<MusicSheet>

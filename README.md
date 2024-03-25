@@ -4,7 +4,7 @@
 
   ## **程序目的**
 
-  ![Screenshot_2024-03-25-10-19-04-81_fad5737028f0e9f96b181e705f042238](pics\Screenshot_2024-03-25-10-19-04-81_fad5737028f0e9f96b181e705f042238.jpg)
+  <img src="pics\Screenshot_2024-03-25-10-19-04-81_fad5737028f0e9f96b181e705f042238.jpg" alt="Screenshot_2024-03-25-10-19-04-81_fad5737028f0e9f96b181e705f042238" style="zoom: 50%;" />
 
   "AIM" （Artificial Intelligence for Music, 音乐疗愈助手）能够利用音乐的治疗潜力促进其使用者的身心健康。经过精心设计、结合现代人工智能（Artificial Intelligence），我们旨在为通过音乐获得慰藉和疗愈的个人提供最好的服务。以下是 AIM 的深入介绍：
 
@@ -35,7 +35,7 @@
   - **service 目录**: 这个文件夹专用于 AIM 应用程序的服务层，处理与后端通信的逻辑。像 MusicService.dart 和 ChatService.dart 这样的文件为管理音乐和与音乐疗愈助手对话提供了服务。
   - **view 目录**: 这个目录包含 AIM Flutter 应用程序的 UI 层。其中包含的各种 Dart 文件用于实现不同的页面，如 HomePage.dart，MusicDetailPage.dart 和 GeneratePage.dart，每个文件负责特定页面的布局和功能。
 
-  **重要：在base_url.dart 中，可以指定与后端服务交互的地址。如果您想将后端服务运行在本地，请将其修改为“http://127.0.0.1”。**
+  **重要：前端源的/service/base_url.dart 中，可以指定与后端服务交互的地址。如果您想将后端服务运行在本地，请将其修改为“http://127.0.0.1”。后端配置需求配置中需要将application中的与python脚本相关的配置路径修改为本地路径，python指向算法中audiocraft\.audiocraft\python，generate、resample2npy、predict指向对应的python文件，musicPath与target指向后端中的对应文件夹即可，并修改其余的mysql，rabbitmq等相关配置**
 
   ## 使用手册
 
