@@ -28,9 +28,15 @@ class _GenericMusicListState extends State<GenericMusicList> {
 
   // The playing music matches the index of the current playlist.
   bool _isThisPlaylist() {
+    late bool result;
     int globalIndex = GlobalMusic.index;
     if (globalIndex < 0) return false;
-    return widget.list[globalIndex].musicId == GlobalMusic.music.musicId;
+    try {
+      result = widget.list[globalIndex].musicId == GlobalMusic.music.musicId;
+    }catch (e) {
+      result = false;
+    }
+    return result;
   }
 
   @override
@@ -89,7 +95,9 @@ class _GenericMusicListState extends State<GenericMusicList> {
                             ]),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
-                        child: Image.network(
+                        child: widget.list[index].image == ""
+                        ? Image.asset("assets/image/logo.png")
+                        : Image.network(
                           widget.list[index].image,
                           fit: BoxFit.contain,
                         ),
@@ -141,7 +149,7 @@ class _GenericMusicListState extends State<GenericMusicList> {
                 MusicService().likeMusic(UserData.userId, widget.list[index].musicId);
                 Navigator.of(context).pop(); // Close the bar
               },
-              child: Text(widget.list[index].isLike ? "移除收藏" : "收藏"),
+              child: Text(widget.list[index].isLike ? "收藏" : "收藏"), //FIXME: 
             ),
           ),
         );

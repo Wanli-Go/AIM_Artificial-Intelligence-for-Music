@@ -20,8 +20,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late TabController _tabController;
 
-  final MusicService homePageMusicService =
-      MusicService();
+  final MusicService homePageMusicService = MusicService();
 
   // Added variables to track loading state
   bool _isLoading = true;
@@ -33,9 +32,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _tabController = TabController(length: 2, vsync: this);
 
     homePageMusicService.getLiked(UserData.userId, 0, 12).then((value) {
-            widget._likedMusicList.addAll(value);
-            _isLoading = false; // Update loading state
+      setState(() {
+        widget._likedMusicList.addAll(value);
+        _isLoading = false; // Update loading state
       });
+    });
 
     // Fetch recently played music only if the list is empty
     // This check prevents refetching data when navigating back to the page
@@ -159,17 +160,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           child: TabBar(
             dividerHeight: 0.5,
             labelStyle: const TextStyle(
-              fontFamily: "Starrail",
-              fontWeight: FontWeight.bold
-            ),
+                fontFamily: "Starrail", fontWeight: FontWeight.bold),
             indicator: BoxDecoration(
               color: Colors.white, // Light grey background
               border: Border.all(
                 color: mainTheme.withOpacity(0.7),
                 width: 1,
               ),
-              borderRadius:
-                  const BorderRadius.all(Radius.circular(10)), // Rounded corners
+              borderRadius: const BorderRadius.all(
+                  Radius.circular(10)), // Rounded corners
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.6),
@@ -203,7 +202,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             GenericMusicList(
                 list: widget._recentlyPlayedMusicList, heightPercentage: 0.35),
             GenericMusicList(
-                list: widget._recentlyPlayedMusicList, heightPercentage: 0.35),
+                list: widget._likedMusicList, heightPercentage: 0.35),
           ]),
         )
       ],

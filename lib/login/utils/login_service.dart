@@ -27,6 +27,7 @@ class LoginService {
         User user = User.fromJson(jsonData);
         UserData.username = user.userName;
         UserData.userPhone = user.userAccount;
+        if(user.image != null) UserData.userImage = user.image!;
         UserData.userIdentity = user.userIdentity;
         UserData.userId = user.userId;
         return '1';

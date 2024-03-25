@@ -71,7 +71,9 @@ class _DiscState extends State<Disc> with SingleTickerProviderStateMixin {
         child: CircleAvatar(
           radius: 22 * widget.scaleFactor,
           // 使用网络图片，传入music的image属性
-          backgroundImage: NetworkImage(music.image),
+          backgroundImage: (music.image == ""
+                        ? AssetImage("assets/image/logo.png")
+                        : NetworkImage(music.image)) as ImageProvider,
         ),
       ),
     );

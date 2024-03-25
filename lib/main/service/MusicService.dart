@@ -15,7 +15,9 @@ class MusicService {
   }
 
   List<Music> extractMusicList(dynamic json) {
+    print("1\n");
     var data = json['data'] as List;
+    print("2\n");
     return data.map((e) => Music.fromJson(e)).toList();
   }
 
@@ -252,7 +254,7 @@ class MusicService {
   }
 
   Future<List<Music>> getGeneratedRecord(String userId) async {
-    String url = '${ip}/getGeneratedRecord';
+    String url = '${ip}/getGenerateHistory';
     // 定义一个map，存储请求的参数
     Map<String, Object> map = {
       'userId': userId,

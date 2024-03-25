@@ -90,7 +90,7 @@ class _PersonalPageState extends State<PersonalPage> {
           ),
           CircleAvatar(
             radius: 40,
-            backgroundImage: NetworkImage(UserData.userImage),
+            backgroundImage: NetworkImage(baseUrl + "/image/" + UserData.userImage),
           ),
           const SizedBox(
             width: 20,
@@ -162,12 +162,14 @@ class _PersonalPageState extends State<PersonalPage> {
                 onPressed: () async {
                   clickedButton(index);
                   String userId = UserData.userId;
-                  final List<Music> musicList = switch (index) {
-                    0 => await MusicService().getHistory(userId, 1, 20),
-                    1 => await MusicService().getLiked(userId, 1, 20),
+                  final List<Music> musicList = [];
+                  musicList.addAll(switch (index) {
+                    0 => await MusicService().getHistory(userId, 0, 20),
+                    1 => await MusicService().getLiked(userId, 0, 20),
                     2 => await MusicService().getGeneratedRecord(userId),
                     int() => throw Exception('Invalid index'),
-                  };
+                  });
+                  print(musicList);
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => Scaffold(

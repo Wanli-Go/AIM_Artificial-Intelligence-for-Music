@@ -160,7 +160,7 @@ class _RecommendPageState extends State<RecommendPage> {
                                                   color: Colors.black),
                                             ),
                                             Text(
-                                              " ${entry.value}%",
+                                              " ${(entry.value*100).toStringAsFixed(2)}%",
                                               style: TextStyle(
                                                   fontSize: 16,
                                                   shadows: [
@@ -183,7 +183,7 @@ class _RecommendPageState extends State<RecommendPage> {
                                                 Radius.circular(10)),
                                             child: LinearProgressIndicator(
                                               minHeight: 8,
-                                              value: entry.value / 100,
+                                              value: entry.value,
                                               valueColor:
                                                   AlwaysStoppedAnimation<Color>(
                                                       Color.fromARGB(
