@@ -1,5 +1,7 @@
 - # AIM - 音乐疗愈助手
 
+  完整项目源码（前端+后端+模型）链接： https://pan.baidu.com/s/1vYBSMVo51jTS34uyi5d4Dw 提取码: abdc
+
   ## **程序目的**
 
   ![Screenshot_2024-03-25-10-19-04-81_fad5737028f0e9f96b181e705f042238](pics\Screenshot_2024-03-25-10-19-04-81_fad5737028f0e9f96b181e705f042238.jpg)
