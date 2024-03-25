@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:music_therapy/main/model/GlobalMusic.dart';
 import 'package:music_therapy/main/model/Music.dart'; // Make sure to import your Music model
 import 'package:music_therapy/app_theme.dart';
+import 'package:music_therapy/main/model/user_data.dart';
 import 'package:music_therapy/main/service/MusicService.dart';
 
 class RecommendPage extends StatefulWidget {
@@ -21,7 +22,7 @@ class _RecommendPageState extends State<RecommendPage> {
 
   void _requestMusicList() async {
     if (widget.musicList.isEmpty || widget.reloaded) {
-      await _service.getRecommendedMusicList().then((value) {
+      await _service.getRecommendedMusicList(UserData.userId).then((value) {
         setState(() {
           widget.musicList.addAll(value);
           isLoading = false;
@@ -149,7 +150,8 @@ class _RecommendPageState extends State<RecommendPage> {
                                           CrossAxisAlignment.end,
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
                                           children: [
                                             Text(
                                               "${entry.key} :",
@@ -164,10 +166,9 @@ class _RecommendPageState extends State<RecommendPage> {
                                                   shadows: [
                                                     Shadow(
                                                         blurRadius: 3,
-                                                        color:
-                                                            Color.fromARGB(255, 255, 192, 173),
-                                                        offset: Offset(
-                                                            0, 1))
+                                                        color: Color.fromARGB(
+                                                            255, 255, 192, 173),
+                                                        offset: Offset(0, 1))
                                                   ],
                                                   color: mainTheme),
                                             ),
@@ -182,11 +183,11 @@ class _RecommendPageState extends State<RecommendPage> {
                                                 Radius.circular(10)),
                                             child: LinearProgressIndicator(
                                               minHeight: 8,
-                                              value: entry.value /
-                                              100,
+                                              value: entry.value / 100,
                                               valueColor:
                                                   AlwaysStoppedAnimation<Color>(
-                                                      Color.fromARGB(255, 255, 216, 110)!),
+                                                      Color.fromARGB(
+                                                          255, 255, 216, 110)),
                                               backgroundColor:
                                                   Color(0xffD6D6D6),
                                             ),

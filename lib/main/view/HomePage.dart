@@ -4,6 +4,7 @@ import 'package:music_therapy/app_theme.dart';
 import 'package:music_therapy/main/component/BottomMusicBar.dart';
 import 'package:music_therapy/main/component/GenericMusicList.dart';
 import 'package:music_therapy/main/model/Music.dart';
+import 'package:music_therapy/main/model/user_data.dart';
 import 'package:music_therapy/main/service/MusicService.dart';
 import 'package:particles_flutter/particles_flutter.dart';
 
@@ -31,22 +32,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     _tabController = TabController(length: 2, vsync: this);
 
+    homePageMusicService.getLiked(UserData.userId, 0, 12).then((value) {
+            widget._likedMusicList.addAll(value);
+            _isLoading = false; // Update loading state
+      });
+
     // Fetch recently played music only if the list is empty
     // This check prevents refetching data when navigating back to the page
     if (widget._recentlyPlayedMusicList.isEmpty ||
         widget._likedMusicList.isEmpty) {
-      homePageMusicService.getRecent("1", 0, 10).then((value) {
+      homePageMusicService.getRecent(UserData.userId).then((value) {
         if (mounted) {
           setState(() {
             widget._recentlyPlayedMusicList.addAll(value);
-            _isLoading = false; // Update loading state
-          });
-        }
-      });
-      homePageMusicService.getLiked("1", 0, 10).then((value) {
-        if (mounted) {
-          setState(() {
-            widget._likedMusicList.addAll(value);
             _isLoading = false; // Update loading state
           });
         }

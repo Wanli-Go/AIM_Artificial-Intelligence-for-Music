@@ -5,6 +5,7 @@ import 'package:music_therapy/main/component/GenericMusicList.dart';
 import 'package:music_therapy/main/model/Music.dart';
 import 'package:music_therapy/main/model/user_data.dart';
 import 'package:music_therapy/main/service/MusicService.dart';
+import 'package:music_therapy/main/service/base_url.dart';
 import 'package:palette_generator/palette_generator.dart'; // Add this line for Neumorphic design
 
 class PersonalPage extends StatefulWidget {
@@ -29,7 +30,7 @@ class _PersonalPageState extends State<PersonalPage> {
 
   Future<void> _updatePaletteGenerator() async {
     paletteGenerator = await PaletteGenerator.fromImageProvider(
-      NetworkImage(UserData.userImage),
+      NetworkImage(baseUrl + "/image/" + UserData.userImage),
       maximumColorCount: 1,
     );
     setState(() {});
@@ -162,9 +163,9 @@ class _PersonalPageState extends State<PersonalPage> {
                   clickedButton(index);
                   String userId = UserData.userId;
                   final List<Music> musicList = switch (index) {
-                    0 => await MusicService().getRecent(userId, 1, 7),
-                    1 => await MusicService().getLiked(userId, 1, 7),
-                    2 => await MusicService().getGenerated(userId, 1, 7),
+                    0 => await MusicService().getHistory(userId, 1, 20),
+                    1 => await MusicService().getLiked(userId, 1, 20),
+                    2 => await MusicService().getGeneratedRecord(userId),
                     int() => throw Exception('Invalid index'),
                   };
                   Navigator.of(context).push(

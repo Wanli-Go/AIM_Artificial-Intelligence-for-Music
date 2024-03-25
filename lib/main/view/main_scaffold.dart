@@ -94,66 +94,83 @@ class _ScaffoldPageState extends State<ScaffoldPage>
 
       return Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: appBarTheme,
-          title: Row(
-            children: [
-              const Icon(Icons.headset_outlined),
-              const SizedBox(
-                width: 15,
-              ),
-              Text(
-                '音乐疗愈助手 AIM',
-                style: appBarTextStyle,
-              ),
-            ],
-          ),
-          actions: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const MusicPlayPage()));
-              },
-              child: Row(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            decoration: BoxDecoration(
+              color: currentIndex == 2 ? mainTheme : appBarTheme,
+            ),
+            child: AppBar(
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              title: Row(
                 children: [
-                  Hero(
-                    tag: "player",
-                    child: Disc(
-                      scaleFactor: 0.8,
-                      controller: globalController!,
-                    ),
+                  Icon(
+                    Icons.headset_outlined,
+                    color: currentIndex == 2 ? Colors.white : null,
                   ),
                   const SizedBox(
-                    width: 10,
+                    width: 15,
+                  ),
+                  Text(
+                    '音乐疗愈助手 AIM',
+                    style: currentIndex == 2
+                        ? TextStyle(color: Colors.white, fontSize: 16.5)
+                        : appBarTextStyle,
                   ),
                 ],
               ),
-            )
-          ],
-          iconTheme: IconThemeData(color: mainTheme),
-        ),
-        body: pendingRefresh ? 
-        Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 20,),
-              Text(
-                '正在处理结果...',
-                style: TextStyle(color: mainTheme),
-              ),
-            ],
+              actions: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MusicPlayPage()));
+                  },
+                  child: Row(
+                    children: [
+                      Hero(
+                        tag: "player",
+                        child: Disc(
+                          scaleFactor: 0.8,
+                          controller: globalController!,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  ),
+                )
+              ],
+              iconTheme: IconThemeData(color: mainTheme),
+            ),
           ),
-        )
-        : TabBarView(
-            physics:
-                const NeverScrollableScrollPhysics(), // swipe navigation handling is not supported
-            controller: _motionTabBarController,
-            children: _pageList),
+        ),
+        body: pendingRefresh
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      '正在处理结果...',
+                      style: TextStyle(color: mainTheme),
+                    ),
+                  ],
+                ),
+              )
+            : TabBarView(
+                physics:
+                    const NeverScrollableScrollPhysics(), // swipe navigation handling is not supported
+                controller: _motionTabBarController,
+                children: _pageList),
         drawer: null,
         bottomNavigationBar: MotionTabBar(
           controller:

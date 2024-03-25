@@ -29,13 +29,12 @@ class _DialogPageState extends State<DialogPage> {
     )
   ];
 
-  final bool _isFirstMessage = true;
+  bool _isFirstMessage = true;
 
   void _sendMessage(Message message) async {
     setState(() {
       messages.add(message);
       _listKey.currentState!.insertItem(messages.length - 1);
-      _textController.clear();
     });
     await Future.delayed(const Duration(milliseconds: 100));
     _scrollDown();
@@ -53,6 +52,7 @@ class _DialogPageState extends State<DialogPage> {
     Message response =
         await ChatService.sendMessage(UserData.userId, text, _isFirstMessage);
     _sendMessage(response);
+    _isFirstMessage = false;
     await Future.delayed(const Duration(milliseconds: 100));
     _scrollDown();
   }
@@ -141,8 +141,8 @@ class _DialogPageState extends State<DialogPage> {
                             isCurrentUser: true,
                           );
                           _sendMessage(message);
-                          _textController.clear();
                           awaitServerResponse(_textController.text);
+                          _textController.clear();
                         }
                       },
                     ),
@@ -231,7 +231,7 @@ class ChatBubble extends StatelessWidget {
                                       fontSize: 12,
                                     ))),
                             ElevatedButton(
-                                onPressed: (){
+                                onPressed: () {
                                   UserData.tokens = message.text;
                                   _buttonClicked(context, provider, 2);
                                 },

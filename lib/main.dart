@@ -40,8 +40,8 @@ class _MyAppState extends State<MyApp> with TickerProviderStateMixin{
           useMaterial3: true,
         ),
         home: const LoginScreen(
-          existingName: "12312341234",
-          existingPassword: "A123der123foo",
+          existingName: "15542279271",
+          existingPassword: "A1234567",
         )
         // TODO: remove existing name and password
       ),

@@ -1,60 +1,46 @@
 // 导入flutter库
 import 'dart:async';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:music_therapy/app_theme.dart';
+import 'package:music_therapy/main/component/GenericMusicList.dart';
 import 'package:music_therapy/main/model/Music.dart';
-
-import '../model/GlobalMusic.dart';
+import 'package:music_therapy/main/model/user_data.dart';
+import 'package:music_therapy/main/service/MusicService.dart';
 
 class GeneratePage extends StatefulWidget {
-  final bool reloaded;
-  const GeneratePage({Key? key, this.reloaded=false}) : super(key: key);
+  bool reloaded;
+  final List<Music> generatedMusicList = [];
+  GeneratePage({Key? key, this.reloaded = true}) : super(key: key);
 
   @override
   _GeneratePageState createState() => _GeneratePageState();
 }
 
 class _GeneratePageState extends State<GeneratePage> {
-  // 定义一个全局的表单键，用于验证表单
+  final MusicService _service = MusicService();
+  final TextEditingController _controller = TextEditingController();
 
-  AudioPlayer audioPlayer = GlobalMusic.globalAudioPlayer;
-  // 创建一个音频播放状态变量
-  PlayerState playerState = GlobalMusic.globalPlayerState;
-  // 创建一个音频播放进度变量
-  Duration position = GlobalMusic.globalPosition;
-  // 创建一个音频总时长变量
-  Duration duration = GlobalMusic.globalDuration;
-
-  Source source = GlobalMusic.globalSource;
+  Future<bool> _requestMusicList(String description) async {
+    if (widget.generatedMusicList.isEmpty || widget.reloaded) {
+      await _service.getGenerated(UserData.userId, description).then((value) {
+        setState(() {
+          widget.generatedMusicList.add(value);
+          widget.reloaded = false;
+        });
+      });
+    }
+    return true;
+  }
 
   @override
   void initState() {
     super.initState();
-    // 监听音频播放器的状态变化
-    audioPlayer.onPlayerStateChanged.listen((state) {
-      if (mounted) {
-        setState(() {
-          playerState = state;
-        });
-      }
-    });
-    // 监听音频播放器的进度变化
-    audioPlayer.onPositionChanged.listen((pos) {
-      if (mounted) {
-        setState(() {
-          position = pos;
-        });
-      }
-    });
-    // 监听音频播放器的时长变化
-    audioPlayer.onDurationChanged.listen((dur) {
-      if (mounted) {
-        setState(() {
-          duration = dur;
-        });
-      }
-    });
+    if(widget.reloaded){
+      widget.generatedMusicList.clear();
+    }
+    if( UserData.tokens.isNotEmpty )_controller.text = UserData.tokens;
   }
 
   // 定义一个格式化时间的方法
@@ -70,7 +56,14 @@ class _GeneratePageState extends State<GeneratePage> {
   }
 
   // 提交
-  void _submit() {
+  void _submit() async {
+    if (_controller.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('请输入提示词！'), // Incorporate error code
+        backgroundColor: mainTheme, // Set a color for error
+      ));
+      return;
+    }
     // 验证表单
     showDialog(
       context: context,
@@ -84,17 +77,16 @@ class _GeneratePageState extends State<GeneratePage> {
               // 一个水平间隔
               SizedBox(width: 10),
               // 一个文本提示
-              Text('加载中...'),
+              Text('生成中，请稍后...'),
             ],
           ),
         );
       },
     );
-    // Use Future.delayed to wait for 5 seconds
-    Future.delayed(const Duration(seconds: 5), () {
-      GlobalMusic.music = Music.generatedMusicExample;
-      // After 5 seconds, close the dialog
-      Navigator.of(context).pop(); // This line dismisses the dialog
+    await _requestMusicList(_controller.text);
+    Navigator.of(context).pop();
+    setState(() {
+      
     });
   }
 
@@ -104,154 +96,209 @@ class _GeneratePageState extends State<GeneratePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      body: Container(
-        // 设置表单键         // 设置表单的子组件为一个水平布局的组件
-        child: SingleChildScrollView(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.8,
-            child: Column(
-              // 设置水平布局的子组件为两端对齐
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              // 设置水平布局的子组件列表
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "音乐生成疗愈",
-                  style: TextStyle(
-                      fontSize: 30,
-                      color: Colors.deepOrange.shade800,
-                      fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.end,
-                ),
-                Row(
-                  children: [
-                    const SizedBox(height: 170),
-                    // 添加一个图标
-                    const Icon(
-                      Icons.lightbulb,
-                      size: 48.0,
-                      color: Colors.yellow,
-                    ),
-                    // 添加一个外边距组件，用于增加空间
-                    const SizedBox(width: 10),
-                    // 添加一个文本提示词
-                    const Text(
-                      '提示词',
-                      style: TextStyle(
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.amber,
-                      ),
-                    ),
-                    // 添加一个外边距组件，用于增加空间
-                    const SizedBox(width: 10),
-                    // 添加一个文本字段，用于输入内容
-                    Expanded(
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          hintText: '一首表现清晨阳光的希望与温暖的音乐',
-                          border: OutlineInputBorder(),
-                        ),
-                        // 设置文本字段的最大行数为3
-                        maxLines: 3,
-                        // 设置文本字段的验证器，用于检查输入是否为空
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return '请输入内容';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    // 添加一个外边距组件，用于增加空间
-                    const SizedBox(width: 10),
-                  ],
-                ),
-
-                const SizedBox(
-                  height: 3,
-                ),
-
-                // 添加一个垂直布局的组件，用于放置按钮
-                Row(
-                  // 设置垂直布局的子组件为居中对齐
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  // 设置垂直布局的子组件列表
-                  children: [
-                    ElevatedButton(
-                      // 设置按钮的文本为提交
-                      onPressed: _submit,
-                      // 设置按钮的文本为提交
-                      child: Text(
-                        '生成音乐',
-                        style: TextStyle(
-                          color: Colors.deepOrange.shade400,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    // 添加一个垂直间隔组件，用于增加空间
-                    // 添加一个按钮组件，用于获取提示词
-                  ],
-                ),
-                // 添加一个外边距组件，用于增加空间
-                const Divider(
-                  color: Colors.grey,
-                  thickness: 2.0,
-                  indent: 10.0,
-                  endIndent: 10.0,
-                ),
-                // 添加一个外边距组件，用于增加空间
-                const SizedBox(height: 10),
-                const Text(
-                  "—— 生成结果 ——",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+              colors: [mainTheme, Colors.purple[50]!],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            )),
+          ),
+          SingleChildScrollView(
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.8,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                // 设置水平布局的子组件列表
+                children: [
+                  const SizedBox(
+                    height: 20,
                   ),
-                ),
-                // 添加一个进度条
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 10,
+                  Text(
+                    "音乐生成疗愈",
+                    textAlign: TextAlign.end,
+                    style: TextStyle(
+                        fontSize: 30,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                              blurRadius: 10,
+                              color: Colors.deepOrange.shade800,
+                              offset: Offset(0, 3))
+                        ],
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: mainTheme,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.white70,
+                            spreadRadius: 1,
+                            blurRadius: 1.5,
+                            offset:
+                                Offset(0, 0.5), // changes position of shadow
+                          )
+                        ]),
+                    width: 90,
+                    child: const Row(
+                      children: [
+                        Icon(
+                          Icons.diamond_outlined,
+                        ),
+                        SizedBox(
+                          width: 3,
+                        ),
+                        Text("VIP 独享")
+                      ],
                     ),
-                    Expanded(
-                      child: Slider(
-                        value: position.inSeconds.toDouble(),
-                        min: 0,
-                        max: duration.inSeconds.toDouble(),
-                        onChanged: (value) {
-                          // 拖动进度条时，跳转到相应的位置
-                          audioPlayer.seek(Duration(seconds: value.toInt()));
-                        },
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.lightbulb,
+                              size: 48.0,
+                              color: Colors.yellowAccent,
+                            ),
+                            // 添加一个外边距组件，用于增加空间
+                            SizedBox(width: 10),
+                            // 添加一个文本提示词
+                            Text(
+                              '提示词',
+                              style: TextStyle(
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  shadows: [
+                                    Shadow(
+                                      blurRadius: 5,
+                                      color: Colors.amber,
+                                      offset: Offset(0, 2),
+                                    )
+                                  ]),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          width: MediaQuery.of(context).size.width * 0.75,
+                          padding: const EdgeInsets.only(
+                              left: 5, right: 5, bottom: 8),
+                          decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.white,
+                                  spreadRadius: 2,
+                                  blurRadius: 4,
+                                  offset: Offset(
+                                      0, 0.5), // changes position of shadow
+                                )
+                              ]),
+                          child: TextFormField(
+                            controller: _controller,
+                            decoration: const InputDecoration(
+                              hintText: '例：一首表现清晨阳光的希望与温暖的音乐',
+                              border: UnderlineInputBorder(),
+                            ),
+                            // 设置文本字段的最大行数为3
+                            maxLines: 5,
+                            // 设置文本字段的验证器，用于检查输入是否为空
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return '请输入内容';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(
+                    height: 5,
+                  ),
+
+                  // 添加一个垂直布局的组件，用于放置按钮
+                  Row(
+                    // 设置垂直布局的子组件为居中对齐
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    // 设置垂直布局的子组件列表
+                    children: [
+                      ElevatedButton(
+                        // 设置按钮的文本为提交
+                        onPressed: _submit,
+                        // 设置按钮的文本为提交
+                        child: Text(
+                          '生成音乐',
+                          style: TextStyle(
+                            color: Colors.deepOrange.shade400,
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
+                      // 添加一个垂直间隔组件，用于增加空间
+                      // 添加一个按钮组件，用于获取提示词
+                    ],
+                  ),
+                  // 添加一个外边距组件，用于增加空间
+                  const SizedBox(height: 20),
+                  const Divider(
+                    color: Colors.grey,
+                    thickness: 2.0,
+                    indent: 10.0,
+                    endIndent: 10.0,
+                  ),
+                  // 添加一个外边距组件，用于增加空间
+                  const SizedBox(height: 20),
+                  const Text(
+                    "—— 生成结果 ——",
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 5,
+                          color: Colors.white24,
+                          offset: Offset(0, 2),
+                        )
+                      ]
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                  ],
-                ),
-                IconButton(
-                  icon: Icon(playerState == PlayerState.playing
-                      ? Icons.pause
-                      : Icons.play_arrow),
-                  iconSize: 40,
-                  onPressed: (){},
-                ),
-                // 显示歌曲播放进度和总时长
-                Text(
-                  '${formatDuration(position)} / ${formatDuration(duration)}',
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ],
+                  ),
+                  widget.generatedMusicList.isEmpty
+                      ? Expanded(child: const Center(child: Text('请按下『生成音乐按钮』，根据提示词生成音乐\n点击右下角『疗愈助手』可以辅助获取提示词')))
+                      : Container(
+                        margin: EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(
+                            color: Colors.grey,
+                          )
+                        ),
+                        child: GenericMusicList(
+                            list: widget.generatedMusicList,
+                            heightPercentage: 0.21),
+                      )
+                ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

@@ -163,7 +163,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             */
                             onPressed: isValid
                                 ? () async {
-                                    passwordController.clear();
                                     showDialog(
                                         context: context,
                                         barrierDismissible:
@@ -181,6 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     final result = await LoginService.login(
                                         phoneController.text,
                                         passwordController.text);
+                                    passwordController.clear();
                                     // Dismiss the dialog
                                     Navigator.pop(context);
                                     if (result == "1") {

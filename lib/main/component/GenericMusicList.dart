@@ -3,15 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:music_therapy/app_theme.dart';
 import 'package:music_therapy/main/model/GlobalMusic.dart';
 import 'package:music_therapy/main/model/Music.dart';
+import 'package:music_therapy/main/model/user_data.dart';
+import 'package:music_therapy/main/service/MusicService.dart';
 
 class GenericMusicList extends StatefulWidget {
   final List<Music> list;
   final double heightPercentage;
   final Widget? upperWidget;
-  const GenericMusicList(
-      {super.key,
-      required this.list,
-      required this.heightPercentage, this.upperWidget,});
+  const GenericMusicList({
+    super.key,
+    required this.list,
+    required this.heightPercentage,
+    this.upperWidget,
+  });
 
   @override
   State<GenericMusicList> createState() => _GenericMusicListState();
@@ -23,16 +27,16 @@ class _GenericMusicListState extends State<GenericMusicList> {
   late int clickedIndex;
 
   // The playing music matches the index of the current playlist.
-  bool _isThisPlaylist(){
+  bool _isThisPlaylist() {
     int globalIndex = GlobalMusic.index;
-    if(globalIndex < 0) return false;
+    if (globalIndex < 0) return false;
     return widget.list[globalIndex].musicId == GlobalMusic.music.musicId;
   }
 
   @override
   void initState() {
     super.initState();
-    if(_isThisPlaylist()) {
+    if (_isThisPlaylist()) {
       clickedIndex = GlobalMusic.index;
     } else {
       clickedIndex = -1;
@@ -50,13 +54,13 @@ class _GenericMusicListState extends State<GenericMusicList> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height:
-          MediaQuery.of(context).size.height * widget.heightPercentage, // 根据屏幕高度自动调整
+      height: MediaQuery.of(context).size.height *
+          widget.heightPercentage, // 根据屏幕高度自动调整
       padding: const EdgeInsets.all(10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if(widget.upperWidget != null)widget.upperWidget!,
+          if (widget.upperWidget != null) widget.upperWidget!,
           Expanded(
             child: ListView.separated(
               separatorBuilder: (context, index) => Divider(
@@ -73,17 +77,16 @@ class _GenericMusicListState extends State<GenericMusicList> {
                     width: 52,
                     child: Container(
                       decoration: (index != clickedIndex) // Is playing or not
-                      ? null
-                      : BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: mainTheme.withOpacity(0.6),
-                            spreadRadius: 3,
-                            blurRadius: 10,
-                            offset: const Offset(0, 1), // changes position of shadow
-                          ),
-                        ]
-                      ),
+                          ? null
+                          : BoxDecoration(boxShadow: [
+                              BoxShadow(
+                                color: mainTheme.withOpacity(0.6),
+                                spreadRadius: 3,
+                                blurRadius: 10,
+                                offset: const Offset(
+                                    0, 1), // changes position of shadow
+                              ),
+                            ]),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10.0),
                         child: Image.network(
@@ -106,7 +109,11 @@ class _GenericMusicListState extends State<GenericMusicList> {
                       fontSize: MediaQuery.of(context).size.height * 0.013,
                     ),
                   ),
-                  trailing: const Icon(Icons.more_vert),
+                  trailing: IconButton(
+                    // Replace the trailing icon
+                    icon: Icon(Icons.more_vert),
+                    onPressed: () => _showFavoriteBar(context, index),
+                  ),
                   onTap: () {
                     // Update the global music to the one that was tapped
                     GlobalMusic.music = widget.list[index];
@@ -119,6 +126,26 @@ class _GenericMusicListState extends State<GenericMusicList> {
           ),
         ],
       ),
+    );
+  }
+
+  void _showFavoriteBar(BuildContext context, int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          height: 50, // Adjust height as needed
+          child: Center(
+            child: ElevatedButton(
+              onPressed: () {
+                MusicService().likeMusic(UserData.userId, widget.list[index].musicId);
+                Navigator.of(context).pop(); // Close the bar
+              },
+              child: Text(widget.list[index].isLike ? "移除收藏" : "收藏"),
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -1,5 +1,8 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:music_therapy/main/model/global_controller.dart';
+import 'package:music_therapy/main/model/user_data.dart';
+import 'package:music_therapy/main/service/MusicService.dart';
+import 'package:music_therapy/main/service/base_url.dart';
 
 import 'Music.dart';
 
@@ -16,9 +19,11 @@ class GlobalMusic {
 
   static int index = -1;
 
-  static Source globalSource = AssetSource('audio/silence.mp3');
+  static Source globalSource = UrlSource("http://172.22.118.20:8080/music/IYJp72k1.wav");
 
   static Duration globalPosition = Duration.zero;
+
+  static MusicService service = MusicService();
 
   // Creating a variable for the total duration of the audio
   static Duration globalDuration = const Duration(seconds: 3);
@@ -34,15 +39,16 @@ class GlobalMusic {
     globalPlayerState = PlayerState.paused;
     _music = newMusic;
     // Update the global source with the new music file
-    globalSource = AssetSource(newMusic.file);
+    globalSource = UrlSource(baseUrl + "/music/" + newMusic.file);//AssetSource(newMusic.file);
     // Reset the global position to zero
     globalPosition = Duration.zero;
     // Set the global duration to the new music's duration
     globalDuration = Duration(seconds: newMusic.duration);
-    // Additional logic to use with the audio player can be added here
-    // For example, loading the new source into the audio player
-    globalSource = AssetSource(newMusic.file);
+
+    service.addRecent(UserData.userId, newMusic.musicId);
+    
     globalAudioPlayer.play(globalSource);
+
     startAnimation();
     globalPlayerState = PlayerState.playing;
   }
